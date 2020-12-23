@@ -33,6 +33,21 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MCM.NexusMods">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.NexusMods.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv3">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv3.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv3.Custom.ScreenTests">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv3.Custom.ScreenTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ModLib">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ModLib.Definitions">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.Definitions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -236,6 +251,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculate_party_tired.cs" />
+    <Compile Include="Hourly_decrease_behaviour.cs" />
+    <Compile Include="Party_tired.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

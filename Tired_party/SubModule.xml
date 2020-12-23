@@ -16,13 +16,14 @@
     <Official value="false" />
     <!-- 此模组正常工作需要的依赖模组 -->
     <DependedModules>
+
         <DependedModule Id="Native" />
         <DependedModule Id="SandBoxCore" />
         <DependedModule Id="Sandbox" />
         <DependedModule Id="CustomBattle" />
         <DependedModule Id="StoryMode" />
     </DependedModules>
-    <!-- 该模组由哪些子模组 (DLLs)组成 -->
+	<!-- 该模组由哪些子模组 (DLLs)组成 -->
     <SubModules>
         <!-- 以下的SubModule标签是可选的。如果你的模组不需要DLL外链，可用移除这部分内容。-->
         <SubModule>
