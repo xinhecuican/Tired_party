@@ -16,7 +16,8 @@
     <Official value="false" />
     <!-- 此模组正常工作需要的依赖模组 -->
     <DependedModules>
-
+		<DependedModule Id="Bannerlord.Harmony" />
+		<DependedModule Id="Bannerlord.MBOptionScreen" />
         <DependedModule Id="Native" />
         <DependedModule Id="SandBoxCore" />
         <DependedModule Id="Sandbox" />

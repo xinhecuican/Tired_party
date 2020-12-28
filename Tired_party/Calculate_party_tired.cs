@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 
@@ -17,23 +18,72 @@ namespace Tired_party
          */
         public static float calculate_ratio(MobileParty mobile)
         {
-            TroopRoster roster = mobile.MemberRoster;
-            TroopRoster prison_roster = mobile.PrisonRoster;
-            int all_tier = 0;
-            foreach(CharacterObject characterObject in roster.Troops)
+            float persist_rate = 0f;
+            if (mobile.Army == null)
             {
-                all_tier += characterObject.Tier;
+                TroopRoster roster = mobile.MemberRoster;
+                TroopRoster prison_roster = mobile.PrisonRoster;
+                int all_tier = 0;
+                foreach (CharacterObject characterObject in roster.Troops)
+                {
+                    all_tier += characterObject.Tier;
+                }
+                int hero_count = roster.TotalHeroes;
+                all_tier += hero_count * 6;
+                int total_count = roster.TotalManCount;
+                float average_tier = (float)all_tier / (float)total_count; //和等级挂钩
+                int wounded = roster.TotalWounded;
+                int captured = prison_roster.TotalWounded + prison_roster.TotalManCount;
+                float persist_hour = (average_tier * (average_tier + 1) / 20 + 3) * 24;
+                float reduce_rate = (float)((wounded * 0.5f + 1.2f * captured) / total_count >= 1 ? 0.2 : 0.2 * (wounded * 0.5f + 1.2f * captured) / total_count);
+                persist_hour = persist_hour * (1 - reduce_rate);
+                persist_rate = 1 / persist_hour;
             }
-            int hero_count = roster.TotalHeroes;
-            all_tier += hero_count * 6;
-            int total_count = roster.TotalManCount + roster.TotalWounded;
-            float average_tier = all_tier / total_count; //和等级挂钩
-            int wounded = roster.TotalWounded;
-            int captured = prison_roster.TotalWounded + prison_roster.TotalManCount;
-            float persist_hour = (average_tier * (average_tier + 1) / 20 + 2) * 24;
-
-            float persist_rate = 1 / persist_hour;
+            else if(mobile.Army != null && mobile.Army.LeaderParty != mobile)
+            {
+                tired_party_data data = null;
+                Party_tired.Current.Party_tired_rate.TryGetValue(mobile.Army.LeaderParty, out data);
+                if(data == null)
+                {
+                    persist_rate = calculate_army(mobile.Army.LeaderParty);
+                }
+                else
+                {
+                    persist_rate = data.Reduce_rate;
+                }
+            }
+            else
+            {
+                persist_rate = calculate_army(mobile);
+            }
             return persist_rate;
+        }
+
+        private static float calculate_army(MobileParty mobile)
+        {
+            int all_tier = 0;
+            int hero_count = 0;
+            int total_count = 0;
+            int wounded = 0;
+            int captured = 0;
+            foreach(MobileParty party in mobile.Army.LeaderPartyAndAttachedParties)
+            {
+                TroopRoster member_roster = party.MemberRoster;
+                TroopRoster prison_roster = party.PrisonRoster;
+                foreach (CharacterObject characterObject in member_roster.Troops)
+                {
+                    all_tier += characterObject.Tier;
+                }
+                hero_count += member_roster.TotalHeroes;
+                total_count += member_roster.TotalManCount;
+                wounded += member_roster.TotalWounded;
+                captured += prison_roster.TotalManCount;
+            }
+            float average_tier = (float)(all_tier + 6 * hero_count) / (float)total_count;
+            float persist_hour = (average_tier * (average_tier + 1) / 20 + 3) * 24;
+            float reduce_rate = (float)((wounded * 0.5f + 1.2f * captured) / total_count >= 1 ? 0.2 : 0.2 * (wounded * 0.5f + 1.2f * captured) / total_count);
+            persist_hour = persist_hour * (1 - reduce_rate);
+            return 1 / persist_hour;
         }
     }
 }

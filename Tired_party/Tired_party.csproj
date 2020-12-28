@@ -251,11 +251,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\AiSleepBehavior.cs" />
+    <Compile Include="Behaviors\Hourly_change_behaviour.cs" />
+    <Compile Include="Behaviors\Recalculate_ratio_behavior.cs" />
     <Compile Include="Calculate_party_tired.cs" />
-    <Compile Include="Hourly_decrease_behaviour.cs" />
+    <Compile Include="Helper\debug_helper.cs" />
+    <Compile Include="Helper\log_helper.cs" />
+    <Compile Include="Helper\message_helper.cs" />
+    <Compile Include="Model\Tired_party_speed_model.cs" />
+    <Compile Include="mod_setting.cs" />
     <Compile Include="Party_tired.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tired_party_data.cs" />
+    <Compile Include="tired_save_definer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SubModule.xml" />
