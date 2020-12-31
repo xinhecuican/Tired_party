@@ -14,9 +14,13 @@ namespace Tired_party
     {
         [SaveableField(1)]
         private Dictionary<MobileParty, tired_party_data> _party_tired_rate;
+        [SaveableField(2)]
+        private static Party_tired _party_tired;
 
         public static float recovery_in_day_time = 0.25f;
         public static float recovery_in_night_time = 0.33f;
+        public static float begin_to_decrease = 0.3f;
+        public static MobileParty test_party = null;
 
         public Dictionary<MobileParty, tired_party_data> Party_tired_rate
         {
@@ -39,7 +43,11 @@ namespace Tired_party
         {
             get
             {
-                return SubModule.Current.party_tired;
+                return Party_tired._party_tired;
+            }
+            set
+            {
+                Party_tired._party_tired = value;
             }
         }
 
@@ -50,7 +58,11 @@ namespace Tired_party
                 return;
             }
             float rate = Calculate_party_tired.calculate_ratio(mobileParty);
-            tired_party_data data = new tired_party_data(1.0f, rate);
+            tired_party_data data = new tired_party_data(1.0f, rate, mobileParty.MemberRoster.TotalManCount);
+            data.AiBehavior = mobileParty.DefaultBehavior;
+            data.ai_behavior_object = mobileParty.TargetSettlement;
+            data.ai_behavior_target = mobileParty.TargetPosition;
+            data.target_party = mobileParty.TargetParty;
             Current._party_tired_rate.Add(mobileParty, data);
         }
 

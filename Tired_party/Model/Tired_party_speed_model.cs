@@ -22,7 +22,7 @@ namespace Tired_party.Model
         public override float CalculateFinalSpeed(MobileParty mobileParty, float baseSpeed, StatExplainer explanation)
         {
             float base_speed =  base.CalculateFinalSpeed(mobileParty, baseSpeed, explanation);
-            if(SubModule.Current == null)
+            if(Party_tired.Current == null)
             {
                 return base_speed;
             }
@@ -47,13 +47,13 @@ namespace Tired_party.Model
             {
                 return 1.1f;
             }
-            else if (now >= 0.3)
+            else if (now >= Party_tired.begin_to_decrease)
             {
                 return 1f;
             }
             else if (now >= 0.05)
             {
-                return (float)(1f - (0.3 - now));
+                return (float)(1f - (Party_tired.begin_to_decrease - now));
             }
             else
             {

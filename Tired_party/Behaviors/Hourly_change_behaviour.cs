@@ -17,11 +17,54 @@ namespace Tired_party.Behaviors
         public override void RegisterEvents()
         {
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(this.HourlyEvent));
+            //CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, new Action<MobileParty>(Hourly_party_event));
         }
+        /*
+        private void Hourly_party_event(MobileParty party)
+        {
+            if (SubModule.Current == null)
+            {
+                return;
+            }
 
+            try
+            {
+                if(party != null && Party_tired.Current.Party_tired_rate.ContainsKey(party))
+                {
+                    if(CampaignTime.Now.IsDayTime)
+                    {
+                        if (party.ShortTermBehavior == AiBehavior.Hold || party.AtCampMode || !party.IsMoving)
+                        {
+                            Party_tired.Current.Party_tired_rate[party].Now += Party_tired.recovery_in_day_time;
+                        }
+                        else
+                        {
+                            Party_tired.Current.Party_tired_rate[party].Now -= Party_tired.Current.Party_tired_rate[party].Reduce_rate;
+                        }
+                    }
+                    else
+                    {
+                        if (party.ShortTermBehavior == AiBehavior.Hold || party.AtCampMode || !party.IsMoving)
+                        {
+                            Party_tired.Current.Party_tired_rate[party].Now += Party_tired.recovery_in_night_time;
+                        }
+                        else
+                        {
+                            Party_tired.Current.Party_tired_rate[party].Now -= Party_tired.Current.Party_tired_rate[party].Reduce_rate * 1.1f;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MethodInfo methodInfo = MethodBase.GetCurrentMethod() as MethodInfo;
+                debug_helper.HandleException(e, methodInfo, "hourly event error");
+            }
+        }*/
+        
         private void HourlyEvent()
         {
-            if(SubModule.Current == null)
+            if(Party_tired.Current == null)
             {
                 return;
             }
@@ -35,7 +78,7 @@ namespace Tired_party.Behaviors
                 {
                     foreach (var party in Party_tired.Current.Party_tired_rate)
                     {
-                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || !party.Key.IsMoving)
+                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
                         {
                             party.Value.Now += Party_tired.recovery_in_day_time;
                             continue;
@@ -47,7 +90,7 @@ namespace Tired_party.Behaviors
                 {
                     foreach (var party in Party_tired.Current.Party_tired_rate)
                     {
-                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || !party.Key.IsMoving)
+                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
                         {
                             party.Value.Now += Party_tired.recovery_in_night_time;
                         }

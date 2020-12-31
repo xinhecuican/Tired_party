@@ -17,39 +17,13 @@ using TaleWorlds.MountAndBlade.ViewModelCollection;
 using TaleWorlds.SaveSystem;
 using Tired_party.Behaviors;
 using Tired_party.Model;
+using Tired_party.Save;
+
 namespace Tired_party
 {
     public class SubModule : MBSubModuleBase
     {
-        [SaveableField(1)]
-        public Party_tired party_tired;
-
-        private static SubModule _current;
-
-        public SubModule()
-        {
-            party_tired = new Party_tired();
-        }
-        public static SubModule Current
-        {
-            get
-            {
-                if(_current == null)
-                {
-                    _current = new SubModule();
-                }
-                return _current;
-            }
-
-            set
-            {
-                if(value is SubModule)
-                {
-                    _current = value;
-                }
-                
-            }
-        }
+        
 
         /// <summary>
         /// 游戏处于加载界面时最先被调用的函数，你应该在这个函数中完成初始化的主要部分
@@ -87,13 +61,12 @@ namespace Tired_party
         private void InitializeGame(Game game, IGameStarter gameStarter)
         {
             Initialize();
-            replace_models(gameStarter as CampaignGameStarter);
             AddBehaviours(gameStarter as CampaignGameStarter);
         }
 
         private void Initialize()
         {
-            Current = new SubModule();
+            Party_tired.Current = new Party_tired();
             Party_tired.Current.initialize();
         }
 
@@ -105,6 +78,8 @@ namespace Tired_party
             }
             starter.AddBehavior(new Hourly_change_behaviour());
             starter.AddBehavior(new Recalculate_ratio_behavior());
+            starter.AddBehavior(new AiSleepBehavior());
+            starter.AddBehavior(new MBsave_behavior());
         }
 
         private void replace_models(CampaignGameStarter starter)
@@ -162,28 +137,24 @@ namespace Tired_party
                 }
                 if (party.Name.ToString().Equals(s))
                 {
+                    Party_tired.test_party = party;
+                    if(party.MapFaction.IsMinorFaction)
+                    {
+                        InformationManager.DisplayMessage(new InformationMessage("minor faction", Colors.Blue));
+                    }
                     if(!party.IsMoving)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("party don't move now!"));
+                        InformationManager.DisplayMessage(new InformationMessage("party don't move"));
                     }
                     if (party.DefaultBehavior == AiBehavior.GoToSettlement)
                     {
                         InformationManager.DisplayMessage(new InformationMessage(party.TargetSettlement.Name.ToString()));
                     }
                     InformationManager.DisplayMessage(new InformationMessage(party.ShortTermBehavior.ToString()));
-                    if(!party.IsActive)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("it's not active"));
-                    }
-
-                    if(!party.IsVisible)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("it's not visible"));
-                    }
 
                     if(party != null && Party_tired.Current.Party_tired_rate.ContainsKey(party))
                     {
-                        InformationManager.DisplayMessage(new InformationMessage(Party_tired.Current.Party_tired_rate[party].Now.ToString()));
+                        InformationManager.DisplayMessage(new InformationMessage(Party_tired.Current.Party_tired_rate[party].Now.ToString(), Colors.Yellow));
                     }
                     else
                     {

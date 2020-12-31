@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
@@ -18,15 +19,33 @@ namespace Tired_party.Behaviors
             CampaignEvents.OnPartySizeChangedEvent.AddNonSerializedListener(this, new Action<PartyBase>(on_party_size_changed));
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, new Action<MobileParty, PartyBase>(on_mobile_party_destroyed));
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, new Action(weekly_tick));
+            CampaignEvents.OnNewGameCreatedEvent9.AddNonSerializedListener(this, new Action(new_game_behavior));
         }
 
         public override void SyncData(IDataStore dataStore)
         {
         }
 
+       private void new_game_behavior()
+        {
+            MBReadOnlyList<MobileParty> parties = Campaign.Current.MobileParties;
+            for (int i = 0; i < parties.Count; i++)
+            {
+                if (parties[i] == null || parties[i].IsCaravan || parties[i].IsVillager)
+                {
+                    continue;
+                }
+                if (!Party_tired.Current.Party_tired_rate.ContainsKey(parties[i]))
+                {
+                    Party_tired.add_to_dict(parties[i]);
+                }
+
+            }
+        }
+
         private void visibility_change(PartyBase party)
         {
-            if(party != null && SubModule.Current != null && party.IsMobile)
+            if(party != null && Party_tired.Current != null && party.IsMobile)
             {
                 MobileParty mobile = party.MobileParty;
                 if(mobile != null && Party_tired.Current.Party_tired_rate.ContainsKey(mobile))
@@ -77,15 +96,21 @@ namespace Tired_party.Behaviors
         {
             try
             {
-                if (party == null || SubModule.Current == null || !party.IsMobile)
+                if (party == null || Party_tired.Current == null || !party.IsMobile)
                 {
                     return;
                 }
                 if (party.MobileParty != null && Party_tired.Current.Party_tired_rate.ContainsKey(party.MobileParty))
                 {
                     tired_party_data data = Party_tired.Current.Party_tired_rate[party.MobileParty];
-                    data.Reduce_rate = Calculate_party_tired.calculate_ratio(party.MobileParty);
-                    Party_tired.Current.Party_tired_rate[party.MobileParty] = data;
+                    if (Math.Abs(party.MobileParty.MemberRoster.TotalManCount - data.Number) >= 5)
+                    {
+                        float now_rate = data.Now;
+                        data.Reduce_rate = Calculate_party_tired.calculate_ratio(party.MobileParty);
+                        data.Now = now_rate;
+                        data.Number = party.MobileParty.MemberRoster.TotalManCount;
+                        Party_tired.Current.Party_tired_rate[party.MobileParty] = data;
+                    }
                 }
             }
             catch(Exception e)

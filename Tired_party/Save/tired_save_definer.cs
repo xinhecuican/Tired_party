@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.SaveSystem;
 
-namespace Tired_party
+namespace Tired_party.Save
 {
     class tired_save_definer : SaveableTypeDefiner
     {
