@@ -48,6 +48,9 @@
     <Reference Include="ModLib.Definitions">
       <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.Definitions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -262,6 +265,7 @@
     <Compile Include="Helper\debug_helper.cs" />
     <Compile Include="Helper\log_helper.cs" />
     <Compile Include="Helper\message_helper.cs" />
+    <Compile Include="Model\Morale_model.cs" />
     <Compile Include="Model\Tired_party_speed_model.cs" />
     <Compile Include="mod_setting.cs" />
     <Compile Include="Party_tired.cs" />
@@ -275,6 +279,7 @@
     <Content Include="SubModule.xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

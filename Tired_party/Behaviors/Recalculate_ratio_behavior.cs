@@ -20,10 +20,19 @@ namespace Tired_party.Behaviors
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, new Action<MobileParty, PartyBase>(on_mobile_party_destroyed));
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, new Action(weekly_tick));
             CampaignEvents.OnNewGameCreatedEvent9.AddNonSerializedListener(this, new Action(new_game_behavior));
+            CampaignEvents.OnPartyRemovedEvent.AddNonSerializedListener(this, new Action<PartyBase>(on_party_remove));
         }
 
         public override void SyncData(IDataStore dataStore)
         {
+        }
+
+        private void on_party_remove(PartyBase partyBase)
+        {
+            if (partyBase.IsMobile &&partyBase.MobileParty != null && Party_tired.Current.Party_tired_rate.ContainsKey(partyBase.MobileParty))
+            {
+                Party_tired.Current.Party_tired_rate.Remove(partyBase.MobileParty);
+            }
         }
 
        private void new_game_behavior()
@@ -81,7 +90,6 @@ namespace Tired_party.Behaviors
                     Party_tired.Current.Party_tired_rate.Remove(keys[i]);
                 }
             }
-            InformationManager.DisplayMessage(new InformationMessage("weeklyTick", Colors.Yellow));
         }
 
         private void on_mobile_party_destroyed(MobileParty mobile, PartyBase destroyerparty)

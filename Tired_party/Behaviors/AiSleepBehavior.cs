@@ -46,6 +46,22 @@ namespace Tired_party.Behaviors
                 {
                     return;
                 }
+                /*if(mobileParty == Campaign.Current.MainParty)
+                {
+                    if(Party_tired.Current.Party_tired_rate[mobileParty].Now <= 1e-8)
+                    {
+                        Party_tired.Current.Party_tired_rate[mobileParty].Limit++;
+                        if (Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24)
+                        {
+                            Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
+                    }
+                }*/
                 if (mobileParty.Army != null && mobileParty.Army.LeaderParty != mobileParty)
                 {
                     foreach(MobileParty party in mobileParty.Army.LeaderParty.AttachedParties)
@@ -91,10 +107,25 @@ namespace Tired_party.Behaviors
                     float ans_army_time = flag_is_day_time ? 0.8f : 1.2f;
                     float ans_army_cohesion = cohesion_remain_time - 2.0f < 0 ? 0.6f : 0.6f + 0.4f * (cohesion_remain_time - 2.0f) / cohesion_remain_time;       //剩余时间越多，就越不着急，可以休息
                     float ans_army = ans_army_cohesion * ans_army_go_to_someplace * ans_army_tired * ans_army_time;
-                    if( ans_army > 0.7f)
+                    if( ans_army > 0.8f)
                     {
                         mobileParty.Army.AIBehavior = Army.AIBehaviorFlags.Waiting;
                     }
+                }
+                if(Party_tired.Current.Party_tired_rate[mobileParty].Now <= 1e-8)
+                {
+                    Party_tired.Current.Party_tired_rate[mobileParty].Limit++;
+                    if(Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24)
+                    {
+                        mobileParty.Ai.DisableForHours(3);
+                        Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
+                        Party_tired.Current.Party_tired_rate[mobileParty].Morale = 0;
+                        return;
+                    }
+                }
+                else
+                {
+                    Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
                 }
 
                 if (

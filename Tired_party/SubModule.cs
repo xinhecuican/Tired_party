@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
+using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
@@ -31,12 +32,6 @@ namespace Tired_party
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
-            Module.CurrentModule.AddInitialStateOption(new InitialStateOption("Message",
-                new TextObject("try", null), 9990,
-                () => { 
-                    InformationManager.DisplayMessage(new InformationMessage("Hello World!"));
-                },
-                false));
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarter)
@@ -44,30 +39,26 @@ namespace Tired_party
             CampaignGameStarter campaign_game_starter = gameStarter as CampaignGameStarter;
             if(campaign_game_starter != null)
             {
+                InitializeGame(game, (IGameStarter)campaign_game_starter);
                 this.replace_models(campaign_game_starter);
             }
         }
 
         public override void OnCampaignStart(Game game, object starterObject)
         {
-            base.OnCampaignStart(game, starterObject);
-            bool flag = (game.GameType is Campaign);
-            if(flag)
-            {
-                InitializeGame(game, (IGameStarter)starterObject);
-            }
+            
         }
         
         private void InitializeGame(Game game, IGameStarter gameStarter)
         {
             Initialize();
+            replace_models(gameStarter as CampaignGameStarter);
             AddBehaviours(gameStarter as CampaignGameStarter);
         }
 
         private void Initialize()
         {
             Party_tired.Current = new Party_tired();
-            Party_tired.Current.initialize();
         }
 
         private void AddBehaviours(CampaignGameStarter starter)
@@ -97,6 +88,10 @@ namespace Tired_party
                     if(list[i] is DefaultPartySpeedCalculatingModel)
                     {
                         list[i] = new Tired_party_speed_model();
+                    }
+                    if(list[i] is DefaultPartyMoraleModel)
+                    {
+                        list[i] = new Morale_model();
                     }
                 }
             }

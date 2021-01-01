@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Diamond;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using Tired_party.Helper;
@@ -74,27 +75,42 @@ namespace Tired_party.Behaviors
             try
             {
                 bool is_daytime = CampaignTime.Now.IsDayTime;
-                if (is_daytime)
+                foreach (var party in Party_tired.Current.Party_tired_rate)
                 {
-                    foreach (var party in Party_tired.Current.Party_tired_rate)
+                    if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
                     {
-                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
+                        if (is_daytime)
                         {
-                            party.Value.Now += Party_tired.recovery_in_day_time;
-                            continue;
+                            party.Value.Now += is_daytime ? Party_tired.recovery_in_day_time : Party_tired.recovery_in_night_time;
                         }
-                        party.Value.Now -= party.Value.Reduce_rate;
+                        else
+                        {
+                            party.Value.Now -= is_daytime ? party.Value.Reduce_rate : party.Value.Reduce_rate * 1.1f;
+                        }
                     }
-                }
-                else
-                {
-                    foreach (var party in Party_tired.Current.Party_tired_rate)
+                    if(party.Value.Now <= 0.3)
                     {
-                        if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
+                        party.Value.Morale += 0.3f - party.Value.Now;
+                    }
+                    else if(party.Value.Morale > 0)
+                    {
+                        party.Value.Morale -= 0.3f;
+                    }
+                        
+                    if(party.Key == Campaign.Current.MainParty)
+                    {
+                        if (party.Value.Now < 0.5f)
                         {
-                            party.Value.Now += Party_tired.recovery_in_night_time;
+                            message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
                         }
-                        party.Value.Now -= party.Value.Reduce_rate * 1.1f;
+                        else if(party.Value.Now < 0.3f)
+                        {
+                            message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
+                        }
+                        else if(party.Value.Now == 0)
+                        {
+                            message_helper.ErrorMessage("部队需要休息");
+                        }
                     }
                 }
             }

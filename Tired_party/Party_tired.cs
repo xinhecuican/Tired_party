@@ -10,10 +10,11 @@ using TaleWorlds.SaveSystem;
 
 namespace Tired_party
 {
+    [SaveableClass(34124065)]
     public class Party_tired
     {
         [SaveableField(1)]
-        private Dictionary<MobileParty, tired_party_data> _party_tired_rate;
+        public Dictionary<MobileParty, tired_party_data> _party_tired_rate;
         [SaveableField(2)]
         private static Party_tired _party_tired;
 
@@ -21,7 +22,6 @@ namespace Tired_party
         public static float recovery_in_night_time = 0.33f;
         public static float begin_to_decrease = 0.3f;
         public static MobileParty test_party = null;
-
         public Dictionary<MobileParty, tired_party_data> Party_tired_rate
         {
             get
@@ -43,6 +43,10 @@ namespace Tired_party
         {
             get
             {
+                if(Party_tired._party_tired == null)
+                {
+                    Party_tired._party_tired = new Party_tired();
+                }
                 return Party_tired._party_tired;
             }
             set
@@ -53,7 +57,7 @@ namespace Tired_party
 
         public static void add_to_dict(MobileParty mobileParty, float now_tired = 1)
         {
-            if(mobileParty.IsCaravan)
+            if(mobileParty.IsCaravan || mobileParty.IsVillager)
             {
                 return;
             }
@@ -66,7 +70,7 @@ namespace Tired_party
             Current._party_tired_rate.Add(mobileParty, data);
         }
 
-        public void initialize()
+        public Party_tired()
         {
             this._party_tired_rate = new Dictionary<MobileParty, tired_party_data>();
         }

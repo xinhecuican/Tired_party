@@ -85,5 +85,17 @@ namespace Tired_party
             persist_hour = persist_hour * (1 - reduce_rate);
             return 1 / persist_hour;
         }
+
+        public static int calculate_remaining_hours(tired_party_data value)
+        {
+            int remaining_hour = 0;
+            float temp = value.Now;
+            while(temp > 0)
+            {
+                temp -= value.Reduce_rate;
+                remaining_hour++;
+            }
+            return remaining_hour;
+        }
     }
 }
