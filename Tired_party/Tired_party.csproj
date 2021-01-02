@@ -36,11 +36,17 @@
     <Reference Include="MCM.NexusMods">
       <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.NexusMods.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv3">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv3.dll</HintPath>
+    <Reference Include="MCMv4">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv3.Custom.ScreenTests">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv3.Custom.ScreenTests.dll</HintPath>
+    <Reference Include="MCMv4.Implementation.MCMv3">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv4.Implementation.MCMv3.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv4.Implementation.ModLib">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\MCMv4.Implementation.ModLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv4.UI">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.UI.dll</HintPath>
     </Reference>
     <Reference Include="ModLib">
       <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>

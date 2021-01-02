@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
@@ -33,7 +34,7 @@ namespace Tired_party.Model
             }
             tired_party_data tired = null;
             Party_tired.Current.Party_tired_rate.TryGetValue(mobileParty, out tired);
-            if (tired != null)
+            if (tired != null && !GlobalSettings<mod_setting>.Instance.is_ban)
             {
                 return base_speed * Get_ratio(tired);
             }
@@ -51,13 +52,13 @@ namespace Tired_party.Model
             {
                 return 1f;
             }
-            else if (now >= 0.05)
+            else if (now >= GlobalSettings<mod_setting>.Instance.limit_speed - 0.7f)
             {
                 return (float)(1f - (Party_tired.begin_to_decrease - now));
             }
             else
             {
-                return 0.75f;
+                return GlobalSettings<mod_setting>.Instance.limit_speed;
             }
         }
     }

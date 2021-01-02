@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace Tired_party.Behaviors
 {
     class AiSleepBehavior : CampaignBehaviorBase
     {
+        private IMapPoint army_ai_behavior_object;
+        private Army.AIBehaviorFlags army_ai_behavior_flags;
+        private bool need_reset = false;
         public override void RegisterEvents()
         {
             CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, new Action<MobileParty>(PartyHourlyTick));
@@ -21,14 +25,9 @@ namespace Tired_party.Behaviors
 
         public override void SyncData(IDataStore dataStore)
         {
-        }
-
-        public void AiHourlyTick(MobileParty mobile, PartyThinkParams p)
-        {
-            if (mobile == Party_tired.test_party)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("aihourlytick"));
-            }
+            dataStore.SyncData("tired_party_army_ai_behavior_object", ref army_ai_behavior_object);
+            dataStore.SyncData("tired_party_army_ai_behavior_flags", ref army_ai_behavior_flags);
+            dataStore.SyncData("tired_party_army_need_reset", ref need_reset);
         }
 
         public void PartyHourlyTick(MobileParty mobileParty)
@@ -42,26 +41,10 @@ namespace Tired_party.Behaviors
             
             try
             {
-                if (Party_tired.Current == null || !Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty))
+                if (Party_tired.Current == null || !Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) || GlobalSettings<mod_setting>.Instance.is_ban)
                 {
                     return;
                 }
-                /*if(mobileParty == Campaign.Current.MainParty)
-                {
-                    if(Party_tired.Current.Party_tired_rate[mobileParty].Now <= 1e-8)
-                    {
-                        Party_tired.Current.Party_tired_rate[mobileParty].Limit++;
-                        if (Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24)
-                        {
-                            Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
-                    }
-                }*/
                 if (mobileParty.Army != null && mobileParty.Army.LeaderParty != mobileParty)
                 {
                     foreach(MobileParty party in mobileParty.Army.LeaderParty.AttachedParties)
@@ -77,6 +60,12 @@ namespace Tired_party.Behaviors
 
                 if (mobileParty.Army != null && mobileParty.Army.LeaderParty == mobileParty && mobileParty.LeaderHero != null)//军队sleep ai
                 {
+                    if(need_reset)
+                    {
+                        mobileParty.Army.AIBehavior = army_ai_behavior_flags;
+                        mobileParty.Army.AiBehaviorObject = army_ai_behavior_object;
+                        need_reset = false;
+                    }
                     if (mobileParty.Army.AIBehavior == Army.AIBehaviorFlags.AssaultingTown || mobileParty.Army.AIBehavior == Army.AIBehaviorFlags.Besieging
                         || mobileParty.Army.AIBehavior == Army.AIBehaviorFlags.Defending || mobileParty.Army.AIBehavior == Army.AIBehaviorFlags.Gathering
                         || mobileParty.Army.AIBehavior == Army.AIBehaviorFlags.Raiding)
@@ -109,13 +98,20 @@ namespace Tired_party.Behaviors
                     float ans_army = ans_army_cohesion * ans_army_go_to_someplace * ans_army_tired * ans_army_time;
                     if( ans_army > 0.8f)
                     {
+                        
+                        army_ai_behavior_flags = mobileParty.Army.AIBehavior;
+                        army_ai_behavior_object = mobileParty.Army.AiBehaviorObject;
+                        need_reset = true;
                         mobileParty.Army.AIBehavior = Army.AIBehaviorFlags.Waiting;
+                        mobileParty.Army.AiBehaviorObject = null;
+
                     }
+                    return;
                 }
                 if(Party_tired.Current.Party_tired_rate[mobileParty].Now <= 1e-8)
                 {
                     Party_tired.Current.Party_tired_rate[mobileParty].Limit++;
-                    if(Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24)
+                    if(Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24+ (mobileParty.LeaderHero != null ? Math.Pow(mobileParty.LeaderHero.GetSkillValue(DefaultSkills.Charm)/300f, 1.2) : 0))
                     {
                         mobileParty.Ai.DisableForHours(3);
                         Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;

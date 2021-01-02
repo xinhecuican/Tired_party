@@ -7,6 +7,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
+using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
@@ -40,7 +41,6 @@ namespace Tired_party
             if(campaign_game_starter != null)
             {
                 InitializeGame(game, (IGameStarter)campaign_game_starter);
-                this.replace_models(campaign_game_starter);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Tired_party
         }
         private void On_key_press()
         {
-            bool flag = Input.IsKeyDown(InputKey.G);
+            bool flag = Input.IsKeyDown(InputKey.G) && Input.IsKeyDown(InputKey.LeftAlt);
             bool flag2 = Game.Current != null && Game.Current.GameStateManager != null
                 && Game.Current.GameStateManager.ActiveState != null && Game.Current.GameStateManager.ActiveState.GetType() == typeof(MapState)
                 && !Game.Current.GameStateManager.ActiveState.IsMission && !Game.Current.GameStateManager.ActiveState.IsMenuState;

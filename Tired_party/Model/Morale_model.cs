@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Tired_party.Model
         public override float GetEffectivePartyMorale(MobileParty mobileParty, StatExplainer explanation = null)
         {
             float base_ans = base.GetEffectivePartyMorale(mobileParty, explanation);
-            if (Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty))
+            if (Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) && !GlobalSettings<mod_setting>.Instance.is_ban)
             {
                 
                 ExplainedNumber explainedNumber = new ExplainedNumber(50f, explanation, null);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -65,13 +66,11 @@ namespace Tired_party.Behaviors
         
         private void HourlyEvent()
         {
-            if(Party_tired.Current == null)
+            if(Party_tired.Current == null || GlobalSettings<mod_setting>.Instance.is_ban)
             {
+                
                 return;
             }
-            float hour = CampaignTime.Now.GetHourOfDay;
-            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=test_of_me_only}Time:" + hour.ToString(), null).ToString()
-                        , Color.FromUint(4282569842U)));
             try
             {
                 bool is_daytime = CampaignTime.Now.IsDayTime;
@@ -81,7 +80,7 @@ namespace Tired_party.Behaviors
                     {
                         if (is_daytime)
                         {
-                            party.Value.Now += is_daytime ? Party_tired.recovery_in_day_time : Party_tired.recovery_in_night_time;
+                            party.Value.Now += is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time : GlobalSettings<mod_setting>.Instance.recovery_in_night_time;
                         }
                         else
                         {
@@ -99,15 +98,15 @@ namespace Tired_party.Behaviors
                         
                     if(party.Key == Campaign.Current.MainParty)
                     {
-                        if (party.Value.Now < 0.5f)
+                        if (party.Value.Now < 0.5f && CampaignTime.Now.ToHours % 12 == 0)
                         {
                             message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
                         }
-                        else if(party.Value.Now < 0.3f)
+                        else if(party.Value.Now < 0.3f && CampaignTime.Now.ToHours % 6 == 0)
                         {
                             message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
                         }
-                        else if(party.Value.Now == 0)
+                        else if(party.Value.Now == 0 && CampaignTime.Now.ToHours % 3 == 0)
                         {
                             message_helper.ErrorMessage("部队需要休息");
                         }
