@@ -33,9 +33,13 @@ namespace Tired_party
             }
         }
  
-        [SettingPropertyBool("{=tired_party_setting_do_not}禁用", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyBool("{=tired_party_setting_do_not}禁用mod", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}设置/{=tired_party_base_setting}基础设置")]
         public bool is_ban { get; set; } = false;
+
+        [SettingPropertyBool("{=tired_party_setting_do_not_army}禁止对集团军产生影响", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}设置/{=tired_party_base_setting}基础设置")]
+        public bool is_ban_army { get; set; } = false;
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}晚上一小时恢复比例", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}晚上每小时恢复的数值，默认是0.33")]
         [SettingPropertyGroup("{=tired_party_setting}设置/{=tired_party_sum_setting}数值设置")]

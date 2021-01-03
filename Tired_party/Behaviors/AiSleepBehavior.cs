@@ -2,6 +2,7 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -36,7 +37,6 @@ namespace Tired_party.Behaviors
              * 目标：让ai会睡觉（晚上更为倾向）
              * 追逐敌军时尽量不让他睡觉
              * 没事时保持充足体力
-             * 0.5是临界值
              */
             
             try
@@ -58,7 +58,8 @@ namespace Tired_party.Behaviors
 
                 bool flag_is_day_time = CampaignTime.Now.IsDayTime;
 
-                if (mobileParty.Army != null && mobileParty.Army.LeaderParty == mobileParty && mobileParty.LeaderHero != null)//军队sleep ai
+                if (mobileParty.Army != null && mobileParty.Army.LeaderParty == mobileParty && mobileParty.LeaderHero != null
+                    && !GlobalSettings<mod_setting>.Instance.is_ban_army)//军队sleep ai
                 {
                     if(need_reset)
                     {
@@ -103,15 +104,21 @@ namespace Tired_party.Behaviors
                         army_ai_behavior_object = mobileParty.Army.AiBehaviorObject;
                         need_reset = true;
                         mobileParty.Army.AIBehavior = Army.AIBehaviorFlags.Waiting;
-                        mobileParty.Army.AiBehaviorObject = null;
-
+                        foreach(Settlement settlement in Settlement.All)
+                        {
+                            if(mobileParty.Army.LeaderParty.Position2D.DistanceSquared(settlement.Position2D) > 100f)
+                            {
+                                mobileParty.Army.AiBehaviorObject = settlement;
+                                break;
+                            }
+                        }
                     }
                     return;
                 }
                 if(Party_tired.Current.Party_tired_rate[mobileParty].Now <= 1e-8)
                 {
                     Party_tired.Current.Party_tired_rate[mobileParty].Limit++;
-                    if(Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24+ (mobileParty.LeaderHero != null ? Math.Pow(mobileParty.LeaderHero.GetSkillValue(DefaultSkills.Charm)/300f, 1.2) : 0))
+                    if(Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24 * (1 + (mobileParty.LeaderHero != null ? Math.Pow(mobileParty.LeaderHero.GetSkillValue(DefaultSkills.Charm)/300f, 1.2) : 0)))
                     {
                         mobileParty.Ai.DisableForHours(3);
                         Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
@@ -131,7 +138,7 @@ namespace Tired_party.Behaviors
                     return;
                 }
 
-                if(Party_tired.Current.Party_tired_rate[mobileParty].need_recovery)
+                if(Party_tired.Current.Party_tired_rate[mobileParty].need_recovery && mobileParty != Campaign.Current.MainParty)
                 {
                     switch(Party_tired.Current.Party_tired_rate[mobileParty].AiBehavior)
                     {
