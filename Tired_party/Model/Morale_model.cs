@@ -28,6 +28,10 @@ namespace Tired_party.Model
             {
                 
                 ExplainedNumber explainedNumber = new ExplainedNumber(50f, explanation, null);
+                if(!GlobalSettings<mod_setting>.Instance.is_ban_army && mobileParty.Army != null)
+                {
+                    return base_ans;
+                }
                 explainedNumber.Add(-Party_tired.Current.Party_tired_rate[mobileParty].Morale);
                 return explainedNumber.ResultNumber;
             }

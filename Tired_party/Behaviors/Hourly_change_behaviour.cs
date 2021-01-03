@@ -83,17 +83,16 @@ namespace Tired_party.Behaviors
                     {
                         party.Value.Now -= is_daytime ? party.Value.Reduce_rate : party.Value.Reduce_rate * 1.1f;
                     }
-                    if ((party.Key.Army != null && !GlobalSettings<mod_setting>.Instance.is_ban_army) || party.Key.Army == null)
+                    
+                    if (party.Value.Now <= 0.3)
                     {
-                        if (party.Value.Now <= 0.3)
-                        {
-                            party.Value.Morale += 0.3f - party.Value.Now;
-                        }
-                        else if (party.Value.Morale > 0)
-                        {
-                            party.Value.Morale -= 0.3f;
-                        }
+                        party.Value.Morale += 0.3f - party.Value.Now;
                     }
+                    else if (party.Value.Morale > 0)
+                    {
+                        party.Value.Morale -= 0.3f;
+                    }
+
                     if(party.Key == Campaign.Current.MainParty)
                     {
                         if (party.Value.Now < 0.5f && CampaignTime.Now.GetHourOfDay % 6 == 0)
