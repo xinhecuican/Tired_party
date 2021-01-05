@@ -52,5 +52,9 @@ namespace Tired_party
         [SettingPropertyFloatingInteger("{=tired_party_limit_speed}速度", 0.7f, 1f, "0.00", Order = 3, RequireRestart = false, HintText = "{=tired_hint_text_limit_speed}体力耗尽时速度的比例，默认是0.25")]
         [SettingPropertyGroup("{=tired_party_setting}设置/{=tired_party_sum_setting}数值设置")]
         public float limit_speed { get; set; } = 0.75f;
+
+        [SettingPropertyFloatingInteger("{=tired_party_limit_presist}最低坚持时间", 2f, 5f, "0.00", Order = 3, RequireRestart = false, HintText = "{=tired_hint_text_limit_persist}每次不睡觉可以坚持的最少时间，默认是3天")]
+        [SettingPropertyGroup("{=tired_party_setting}设置/{=tired_party_sum_setting}数值设置")]
+        public float persist_time { get; set; } = 3f;
     }
 }

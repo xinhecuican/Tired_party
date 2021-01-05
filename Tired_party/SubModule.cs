@@ -18,6 +18,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
 using TaleWorlds.SaveSystem;
 using Tired_party.Behaviors;
+using Tired_party.Helper;
 using Tired_party.Model;
 using Tired_party.Save;
 
@@ -96,6 +97,61 @@ namespace Tired_party
                 }
             }
         }
+
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            InformationManager.OnAddTooltipInformation += add_information;
+        }
+
+        private void add_information(Type type, object[] args)
+        {
+            if (type == typeof(Army))
+            {
+                Army army = (Army)args[0];
+                float army_now_tired = 0;
+                if(!Party_tired.Current.Party_tired_rate.ContainsKey(army.LeaderParty))
+                {
+                    message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + "没有加入");
+                    return;
+                }
+                foreach (MobileParty party in army.LeaderPartyAndAttachedParties)
+                {
+                    if (Party_tired.Current.Party_tired_rate.ContainsKey(party))
+                    {
+                        army_now_tired += Party_tired.Current.Party_tired_rate[party].Now;
+                    }
+                }
+                army_now_tired /= army.Parties.Count;
+                int remain_hours = 0;
+                while (army_now_tired > 0)
+                {
+                    remain_hours++;
+                    army_now_tired -= Party_tired.Current.Party_tired_rate[army.LeaderParty].Reduce_rate;
+                }
+                message_helper.TechnicalMessage(army.Name.ToString() + "还剩" + remain_hours + "小时达到极限");
+            }
+            if (type == typeof(MobileParty))
+            {
+                MobileParty mobile = (MobileParty)args[0];
+                if(last_party == mobile && Campaign.CurrentTime - last_see_hour <= 1)
+                {
+                    return;
+                }
+                last_party = mobile;
+                last_see_hour = Campaign.CurrentTime;
+                if(Party_tired.Current.Party_tired_rate.ContainsKey(mobile))
+                {
+                    message_helper.TechnicalMessage(mobile.Name + "还剩" + Calculate_party_tired.calculate_remaining_hours(Party_tired.Current.Party_tired_rate[mobile]).ToString() + "小时达到极限");
+                }
+                else if(!mobile.IsCaravan || !mobile.IsVillager)
+                {
+                    message_helper.ErrorMessage(mobile.Name.ToString() + "没有加入");
+                }
+            }
+        }
+        private MobileParty last_party;
+        private float last_see_hour = 0;
+
 
         protected override void OnApplicationTick(float dt)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ namespace Tired_party
                 float average_tier = (float)all_tier / (float)total_count; //和等级挂钩
                 int wounded = roster.TotalWounded;
                 int captured = prison_roster.TotalWounded + prison_roster.TotalManCount;
-                float persist_hour = (average_tier * (average_tier + 1) / 20 + 3) * 24;
+                float persist_hour = (average_tier * (average_tier + 1) / 20 + GlobalSettings<mod_setting>.Instance.persist_time) * 24;
                 float reduce_rate = (float)((wounded * 0.5f + 1.2f * captured) / total_count >= 1 ? 0.2 : 0.2 * (wounded * 0.5f + 1.2f * captured) / total_count);
                 persist_hour = persist_hour * (1 - reduce_rate);
                 persist_rate = 1 / persist_hour;
@@ -80,7 +81,7 @@ namespace Tired_party
                 captured += prison_roster.TotalManCount;
             }
             float average_tier = (float)(all_tier + 6 * hero_count) / (float)total_count;
-            float persist_hour = (average_tier * (average_tier + 1) / 20 + 3) * 24;
+            float persist_hour = (average_tier * (average_tier + 1) / 20 + GlobalSettings<mod_setting>.Instance.persist_time) * 24;
             float reduce_rate = (float)((wounded * 0.5f + 1.2f * captured) / total_count >= 1 ? 0.2 : 0.2 * (wounded * 0.5f + 1.2f * captured) / total_count);
             persist_hour = persist_hour * (1 - reduce_rate);
             return 1 / persist_hour;

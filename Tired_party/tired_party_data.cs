@@ -33,7 +33,10 @@ namespace Tired_party
         private int _limit;
         [SaveableField(10)]
         private float morale_change;
-        
+        public IMapPoint army_ai_behavior_object;
+        public Army.AIBehaviorFlags army_ai_behavior_flags;
+        public bool need_reset_army = false;
+
         public int Limit { get { return _limit; } set{ _limit = value; } }
         public int Number { get { return _number; } set { if (value < 0) { _number = 0; } else { _number = value; } } }
         public float Reduce_rate { get { return _reduce_rate; } set { this._now_tired_sum = value; } }
