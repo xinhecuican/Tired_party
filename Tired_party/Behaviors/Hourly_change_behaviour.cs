@@ -97,15 +97,18 @@ namespace Tired_party.Behaviors
                     {
                         if (party.Value.Now < 0.5f && CampaignTime.Now.GetHourOfDay % 6 == 0)
                         {
-                            message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
+                            //message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
+                            message_helper.SimpleMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
                         }
                         else if(party.Value.Now < 0.3f && CampaignTime.Now.GetHourOfDay % 3 == 0)
                         {
-                            message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
+                            // message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
+                            message_helper.TechnicalMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
                         }
                         else if(party.Value.Now == 0 && CampaignTime.Now.GetHourOfDay % 2 == 0)
                         {
-                            message_helper.ErrorMessage("部队需要休息");
+                            //message_helper.ErrorMessage("部队需要休息");
+                            message_helper.ErrorMessage("Troop needs rest ");
                         }
                     }
                 }

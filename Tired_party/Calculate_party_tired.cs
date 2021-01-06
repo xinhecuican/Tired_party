@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 
 namespace Tired_party
 {
@@ -25,12 +26,13 @@ namespace Tired_party
                 TroopRoster roster = mobile.MemberRoster;
                 TroopRoster prison_roster = mobile.PrisonRoster;
                 int all_tier = 0;
-                foreach (CharacterObject characterObject in roster.Troops)
+                foreach (TroopRosterElement characterObject in roster)
                 {
-                    all_tier += characterObject.Tier;
+                    all_tier += characterObject.Character.Tier * characterObject.Number;
                 }
                 int hero_count = roster.TotalHeroes;
                 all_tier += hero_count * 6;
+                
                 int total_count = roster.TotalManCount;
                 float average_tier = (float)all_tier / (float)total_count; //和等级挂钩
                 int wounded = roster.TotalWounded;
@@ -71,9 +73,9 @@ namespace Tired_party
             {
                 TroopRoster member_roster = party.MemberRoster;
                 TroopRoster prison_roster = party.PrisonRoster;
-                foreach (CharacterObject characterObject in member_roster.Troops)
+                foreach (TroopRosterElement characterObject in member_roster)
                 {
-                    all_tier += characterObject.Tier;
+                    all_tier += characterObject.Character.Tier * characterObject.Number;
                 }
                 hero_count += member_roster.TotalHeroes;
                 total_count += member_roster.TotalManCount;

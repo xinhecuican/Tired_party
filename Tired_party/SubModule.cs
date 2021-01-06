@@ -1,22 +1,13 @@
+using MCM.Abstractions.Settings.Base.Global;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
-using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
-using TaleWorlds.Engine.Screens;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.ViewModelCollection;
-using TaleWorlds.SaveSystem;
 using Tired_party.Behaviors;
 using Tired_party.Helper;
 using Tired_party.Model;
@@ -105,13 +96,18 @@ namespace Tired_party
 
         private void add_information(Type type, object[] args)
         {
-            if (type == typeof(Army))
+            if(GlobalSettings<mod_setting>.Instance.is_ban)
+            {
+                return;
+            }
+            if (type == typeof(Army) && !GlobalSettings<mod_setting>.Instance.is_ban_army)
             {
                 Army army = (Army)args[0];
                 float army_now_tired = 0;
                 if(!Party_tired.Current.Party_tired_rate.ContainsKey(army.LeaderParty))
                 {
-                    message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + "没有加入");
+                    //message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + "没有加入");
+                    message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + " don't add");
                     return;
                 }
                 foreach (MobileParty party in army.LeaderPartyAndAttachedParties)
@@ -122,13 +118,15 @@ namespace Tired_party
                     }
                 }
                 army_now_tired /= army.Parties.Count;
+                float temp = army_now_tired;
                 int remain_hours = 0;
                 while (army_now_tired > 0)
                 {
                     remain_hours++;
                     army_now_tired -= Party_tired.Current.Party_tired_rate[army.LeaderParty].Reduce_rate;
                 }
-                message_helper.TechnicalMessage(army.Name.ToString() + "还剩" + remain_hours + "小时达到极限");
+                //message_helper.TechnicalMessage(army.Name.ToString() + "还剩" + remain_hours + "小时("+show_information(temp)+")");
+                message_helper.TechnicalMessage(army.Name.ToString() + " remain " + remain_hours + " hours(" + show_information(temp) + ")");
             }
             if (type == typeof(MobileParty))
             {
@@ -141,16 +139,39 @@ namespace Tired_party
                 last_see_hour = Campaign.CurrentTime;
                 if(Party_tired.Current.Party_tired_rate.ContainsKey(mobile))
                 {
-                    message_helper.TechnicalMessage(mobile.Name + "还剩" + Calculate_party_tired.calculate_remaining_hours(Party_tired.Current.Party_tired_rate[mobile]).ToString() + "小时达到极限");
+                    //message_helper.TechnicalMessage(mobile.Name + "还剩" + Calculate_party_tired.calculate_remaining_hours(Party_tired.Current.Party_tired_rate[mobile]).ToString() + 
+                        //"小时("+show_information(Party_tired.Current.Party_tired_rate[mobile].Now)+")");
+                    message_helper.TechnicalMessage(mobile.Name + " remain " + Calculate_party_tired.calculate_remaining_hours(Party_tired.Current.Party_tired_rate[mobile]).ToString() +
+                        " hours(" + show_information(Party_tired.Current.Party_tired_rate[mobile].Now) + ")");
                 }
-                else if(!mobile.IsCaravan || !mobile.IsVillager)
+                else if(!mobile.IsCaravan && !mobile.IsVillager)
                 {
-                    message_helper.ErrorMessage(mobile.Name.ToString() + "没有加入");
+                    //message_helper.ErrorMessage(mobile.Name.ToString() + "没有加入");
+                    message_helper.ErrorMessage(mobile.Name.ToString() + " don't add");
                 }
             }
         }
         private MobileParty last_party;
         private float last_see_hour = 0;
+
+        private string show_information(float rate)
+        {
+            if(rate > 0.3)
+            {
+                //return "正常";
+                return "normal";
+            }
+            else if(rate > 0)
+            {
+                //return "疲惫";
+                return "tired";
+            }
+            else
+            {
+                //return "濒临崩溃";
+                return "Near collapse";
+            }
+        }
 
 
         protected override void OnApplicationTick(float dt)
@@ -159,7 +180,7 @@ namespace Tired_party
         }
         private void On_key_press()
         {
-            bool flag = Input.IsKeyDown(InputKey.G) && Input.IsKeyDown(InputKey.LeftAlt);
+            bool flag = Input.IsKeyDown(InputKey.G);
             bool flag2 = Game.Current != null && Game.Current.GameStateManager != null
                 && Game.Current.GameStateManager.ActiveState != null && Game.Current.GameStateManager.ActiveState.GetType() == typeof(MapState)
                 && !Game.Current.GameStateManager.ActiveState.IsMission && !Game.Current.GameStateManager.ActiveState.IsMenuState;
@@ -205,7 +226,7 @@ namespace Tired_party
 
                     if(party != null && Party_tired.Current.Party_tired_rate.ContainsKey(party))
                     {
-                        InformationManager.DisplayMessage(new InformationMessage(Party_tired.Current.Party_tired_rate[party].Now.ToString(), Colors.Yellow));
+                        InformationManager.DisplayMessage(new InformationMessage(Party_tired.Current.Party_tired_rate[party].Now.ToString() + "..." + Party_tired.Current.Party_tired_rate[party].Reduce_rate.ToString(), Colors.Yellow));
                     }
                     else
                     {

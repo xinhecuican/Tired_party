@@ -33,13 +33,16 @@ namespace Tired_party
         private int _limit;
         [SaveableField(10)]
         private float morale_change;
+        [SaveableField(11)]
         public IMapPoint army_ai_behavior_object;
+        [SaveableField(12)]
         public Army.AIBehaviorFlags army_ai_behavior_flags;
+        [SaveableField(13)]
         public bool need_reset_army = false;
 
         public int Limit { get { return _limit; } set{ _limit = value; } }
         public int Number { get { return _number; } set { if (value < 0) { _number = 0; } else { _number = value; } } }
-        public float Reduce_rate { get { return _reduce_rate; } set { this._now_tired_sum = value; } }
+        public float Reduce_rate { get { return _reduce_rate; } set { this._reduce_rate = value; } }
 
         public float Morale
         {
@@ -87,6 +90,16 @@ namespace Tired_party
             this._reduce_rate = _reduce_rate;
             this._now_tired_sum = now_tired_sum;
             _number = number;
+            need_recovery = false;
+            Limit = 0;
+            Morale = 0;
+        }
+
+        public tired_party_data()
+        {
+            _reduce_rate = 0;
+            _now_tired_sum = 0;
+            _number = 0;
             need_recovery = false;
             Limit = 0;
             Morale = 0;
