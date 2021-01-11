@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.SaveSystem;
+using Tired_party.Information_Screen;
 
 namespace Tired_party.Save
 {
@@ -17,12 +18,15 @@ namespace Tired_party.Save
             // The Id's here are local and will be related to the Id passed to the constructor
             AddClassDefinition(typeof(Party_tired), 1);
             AddClassDefinition(typeof(tired_party_data), 2);
+            AddClassDefinition(typeof(information_data), 3);
         }
 
         protected override void DefineContainerDefinitions()
         {
             ConstructContainerDefinition(typeof(List<tired_party_data>));
             ConstructContainerDefinition(typeof(Dictionary<MobileParty, tired_party_data>));
+            ConstructContainerDefinition(typeof(List<information_data>));
+            ConstructContainerDefinition(typeof(Dictionary<float, string>));
         }
     }
 }

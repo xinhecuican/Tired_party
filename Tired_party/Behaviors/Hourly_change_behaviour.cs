@@ -10,6 +10,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Diamond;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 using Tired_party.Helper;
 
 namespace Tired_party.Behaviors
@@ -75,40 +76,76 @@ namespace Tired_party.Behaviors
                 bool is_daytime = CampaignTime.Now.IsDayTime;
                 foreach (var party in Party_tired.Current.Party_tired_rate)
                 {
-                    if (party.Key.ShortTermBehavior == AiBehavior.Hold || party.Key.AtCampMode || party.Key.Position2D == party.Key.TargetPosition)
-                    { 
-                        party.Value.Now += is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time : GlobalSettings<mod_setting>.Instance.recovery_in_night_time;
+                    float value_event = (party.Key.MapEvent != null || party.Key.BesiegedSettlement != null) ? 0.6f : 1f;
+                    float value_settlement = party.Key.CurrentSettlement != null ? 1.2f : 1f;
+                    if (party.Key.IsMainParty)
+                    {
+                        if(party.Key.DefaultBehavior == AiBehavior.Hold || party.Key.AtCampMode
+                          || party.Key.Position2D == party.Key.TargetPosition || !party.Key.IsMoving)
+                        {
+                            party.Value.Now += value_event * value_settlement * (is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main : GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main);
+                        }
+                        else
+                        {
+                            party.Value.Now -= is_daytime ? party.Value.Reduce_rate : party.Value.Reduce_rate * 1.1f;
+                        }
                     }
                     else
                     {
-                        party.Value.Now -= is_daytime ? party.Value.Reduce_rate : party.Value.Reduce_rate * 1.1f;
+                        if (party.Key.DefaultBehavior == AiBehavior.Hold || party.Key.AtCampMode
+                          || party.Key.Position2D == party.Key.TargetPosition || !party.Key.IsMoving)
+                        {
+                            
+                            party.Value.Now += value_settlement * value_event * (is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time : GlobalSettings<mod_setting>.Instance.recovery_in_night_time);
+                        }
+                        else
+                        {
+                            party.Value.Now -= is_daytime ? party.Value.Reduce_rate : party.Value.Reduce_rate * 1.1f;
+                        }
                     }
-                    
-                    if (party.Value.Now <= 0.3)
+
+                    if(party.Value.Now > 0.8)
+                    {
+                        party.Value.Morale = -5f;
+                    }
+                    else if (party.Value.Now <= 0.3)
                     {
                         party.Value.Morale += 0.3f - party.Value.Now;
                     }
-                    else if (party.Value.Morale > 0)
+                    else if (party.Value.Morale > 1e-8)
                     {
-                        party.Value.Morale -= 0.3f;
+                        if (party.Value.Morale > 0)
+                        {
+                            party.Value.Morale = party.Value.Morale - 0.3f < 0 ? 0 : party.Value.Morale - 0.3f;
+                        }
+                        else
+                        {
+                            party.Value.Morale = party.Value.Morale + 0.3f > 0 ? 0 : party.Value.Morale + 0.3f;
+                        }
                     }
 
                     if(party.Key == Campaign.Current.MainParty)
                     {
                         if (party.Value.Now < 0.5f && CampaignTime.Now.GetHourOfDay % 6 == 0)
                         {
-                            //message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
-                            message_helper.SimpleMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
+                            if(BannerlordConfig.Language.Equals("简体中文"))
+                                message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
+                            else
+                                message_helper.SimpleMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
                         }
                         else if(party.Value.Now < 0.3f && CampaignTime.Now.GetHourOfDay % 3 == 0)
                         {
-                            // message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
-                            message_helper.TechnicalMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
+                            if(BannerlordConfig.Language.Equals("简体中文"))
+                                message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");
+                            else
+                                message_helper.TechnicalMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
                         }
                         else if(party.Value.Now == 0 && CampaignTime.Now.GetHourOfDay % 2 == 0)
                         {
-                            //message_helper.ErrorMessage("部队需要休息");
-                            message_helper.ErrorMessage("Troop needs rest ");
+                            if(BannerlordConfig.Language.Equals("简体中文"))
+                                message_helper.ErrorMessage("部队需要休息");
+                            else
+                                message_helper.ErrorMessage("Troop needs rest ");
                         }
                     }
                 }

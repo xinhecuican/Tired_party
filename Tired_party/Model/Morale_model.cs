@@ -32,7 +32,7 @@ namespace Tired_party.Model
                 {
                     return base_ans;
                 }
-                explainedNumber.Add(-Party_tired.Current.Party_tired_rate[mobileParty].Morale);
+                explainedNumber.Add(-(Party_tired.Current.Party_tired_rate[mobileParty].Morale * GlobalSettings<mod_setting>.Instance.morale_reduce));
                 return explainedNumber.ResultNumber;
             }
             return base_ans;

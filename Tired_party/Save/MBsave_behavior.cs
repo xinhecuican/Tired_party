@@ -12,6 +12,7 @@ using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.SaveSystem;
 using Tired_party.Helper;
+using Tired_party.Information_Screen;
 
 namespace Tired_party.Save
 {
@@ -30,6 +31,11 @@ namespace Tired_party.Save
             {
                 party.Party_tired_rate[key.Key] = key.Value;
             }
+            party.information.Clear();
+            foreach(information_data data in Party_tired.Current.Information)
+            {
+                party.Information.Add(data);
+            }
         }
 
         private void LoadData(CampaignGameStarter starter)
@@ -37,6 +43,11 @@ namespace Tired_party.Save
             foreach (KeyValuePair<MobileParty, tired_party_data> key in party.Party_tired_rate)
             {
                 Party_tired.Current.Party_tired_rate[key.Key] = key.Value;
+            }
+
+            foreach(information_data data in party.Information)
+            {
+                Party_tired.Current.Information.Add(data);
             }
         }
 
@@ -47,6 +58,7 @@ namespace Tired_party.Save
             try
             {
                 dataStore.SyncData("tired_party_data", ref party._party_tired_rate);
+                dataStore.SyncData("tired_party_information_data", ref party.information);
                 
             }
             catch (Exception)

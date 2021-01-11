@@ -44,7 +44,7 @@ namespace Tired_party.Model
         private float Get_ratio(tired_party_data tired)
         {
             float now = tired.Now;
-            if (now >= 0.9)
+            if (now >= 0.8)
             {
                 return 1.1f;
             }

@@ -44,16 +44,11 @@ namespace Tired_party
             }
             else if(mobile.Army != null && mobile.Army.LeaderParty != mobile)
             {
-                tired_party_data data = null;
-                Party_tired.Current.Party_tired_rate.TryGetValue(mobile.Army.LeaderParty, out data);
-                if(data == null)
+                if(!Party_tired.Current.Party_tired_rate.ContainsKey(mobile.Army.LeaderParty))
                 {
-                    persist_rate = calculate_army(mobile.Army.LeaderParty);
+                    Party_tired.add_to_dict(mobile.Army.LeaderParty);
                 }
-                else
-                {
-                    persist_rate = data.Reduce_rate;
-                }
+                persist_rate = Party_tired.Current.Party_tired_rate[mobile.Army.LeaderParty].Reduce_rate;
             }
             else
             {

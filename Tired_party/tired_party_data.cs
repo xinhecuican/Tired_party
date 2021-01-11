@@ -39,6 +39,8 @@ namespace Tired_party
         public Army.AIBehaviorFlags army_ai_behavior_flags;
         [SaveableField(13)]
         public bool need_reset_army = false;
+        [SaveableField(14)]
+        public int reset_time;
 
         public int Limit { get { return _limit; } set{ _limit = value; } }
         public int Number { get { return _number; } set { if (value < 0) { _number = 0; } else { _number = value; } } }
@@ -52,13 +54,13 @@ namespace Tired_party
             }
             set
             {
-                if(value >= 0)
+                if(value > 40)
                 {
-                    morale_change = value;
+                    morale_change = 40;
                 }
                 else
                 {
-                    morale_change = 0;
+                    morale_change = value;
                 }
             }
         }
@@ -93,6 +95,7 @@ namespace Tired_party
             need_recovery = false;
             Limit = 0;
             Morale = 0;
+            reset_time = 0;
         }
 
         public tired_party_data()
@@ -103,6 +106,7 @@ namespace Tired_party
             need_recovery = false;
             Limit = 0;
             Morale = 0;
+            reset_time = 0;
         }
     }
 }

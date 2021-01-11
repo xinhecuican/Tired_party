@@ -115,11 +115,6 @@ namespace Tired_party.Behaviors
                         
                         Party_tired.Current.Party_tired_rate[party.MobileParty].Reduce_rate = Calculate_party_tired.calculate_ratio(party.MobileParty);
                         Party_tired.Current.Party_tired_rate[party.MobileParty].Number = party.MobileParty.MemberRoster.TotalManCount;
-                        if(party.MobileParty == Campaign.Current.MainParty)
-                        {
-                            InformationManager.DisplayMessage(new InformationMessage(Party_tired.Current.Party_tired_rate[party.MobileParty].Now.ToString() + "..." + Party_tired.Current.Party_tired_rate[party.MobileParty].Reduce_rate.ToString()));
-                            InformationManager.DisplayMessage(new InformationMessage(Calculate_party_tired.calculate_ratio(party.MobileParty).ToString()));
-                        }
                     }
                 }
             }
