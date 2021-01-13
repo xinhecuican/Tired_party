@@ -110,8 +110,7 @@ namespace Tired_party
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            if(!GlobalSettings<mod_setting>.Instance.is_ban_information)
-                InformationManager.OnAddTooltipInformation += add_information;
+            InformationManager.OnAddTooltipInformation += add_information;
             InformationManager.DisplayMessageInternal += store_info;
             InformationManager.FiringQuickInformation += store_quick;
         }
@@ -128,7 +127,7 @@ namespace Tired_party
 
         private void add_information(Type type, object[] args)
         {
-            if(GlobalSettings<mod_setting>.Instance.is_ban)
+            if(GlobalSettings<mod_setting>.Instance.is_ban || GlobalSettings<mod_setting>.Instance.is_ban_information)
             {
                 return;
             }
@@ -245,7 +244,7 @@ namespace Tired_party
 
         protected override void OnApplicationTick(float dt)
         {
-            this.On_key_press();
+            //this.On_key_press();
         }
         private void On_key_press()
         {

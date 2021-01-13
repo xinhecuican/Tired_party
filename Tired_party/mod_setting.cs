@@ -3,6 +3,8 @@ using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Dropdown;
 using MCM.Abstractions.Settings.Base;
 using MCM.Abstractions.Settings.Base.Global;
+using System;
+using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -64,15 +66,13 @@ namespace Tired_party
         */
         [SettingPropertyBool("{=tired_party_setting_do_not}ban mod", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
-        public bool is_ban { get; set; } = false;
+        public bool is_ban { get; set; } 
 
         [SettingPropertyBool("{=tired_party_setting_do_not_army}ban army effect", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
-        public bool is_ban_army { get; set; } = false;
+        public bool is_ban_army { get; set; } 
 
-        [SettingPropertyBool("{=jDamJPB6mC}don't show information left", RequireRestart = true, IsToggle = false)]
-        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
-        public bool is_ban_information { get; set; } = true;
+        
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
@@ -102,16 +102,71 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float morale_reduce { get; set; } = 1f;
 
+        [SettingPropertyBool("{=jDamJPB6mC}don't show information left", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]
+        public bool is_ban_information { get; set; }
+
         [SettingPropertyBool("{=742k0tuqk7}don't show someone is capture by someone", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]
-        public bool is_ban_capture_information { get; set; } = false;
+        public bool is_ban_capture_information { get; set; } 
 
         [SettingPropertyBool("{=nhR9oUfEbO}don't show someone is released by someone", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]
-        public bool is_ban_release_information { get; set; } = false;
+        public bool is_ban_release_information { get; set; } 
 
         [SettingPropertyBool("{=zetGJp2Mc3}don't show someone marry someone", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]
-        public bool is_ban_married_information { get; set; } = false;
+        public bool is_ban_married_information { get; set; } 
+
+        public override IDictionary<string, Func<BaseSettings>> GetAvailablePresets()
+        {
+            IDictionary<string, Func<BaseSettings>> availablePresets = base.GetAvailablePresets();
+            availablePresets.Add("{=8EjxocaSoz}suggested", () => new mod_setting
+            {
+                is_ban = false,
+                is_ban_army = false,
+                is_ban_capture_information = false,
+                is_ban_information = true,
+                is_ban_married_information = false,
+                is_ban_release_information = false
+            });
+            availablePresets.Add("{=lD8T7MpIk8}ban army}", () => new mod_setting
+            {
+                is_ban = false,
+                is_ban_release_information = false,
+                is_ban_married_information = false,
+                is_ban_army = true,
+                is_ban_capture_information = false,
+                is_ban_information = false
+            });
+            availablePresets.Add("{=BrLbKO92TM}ban information}", () => new mod_setting
+            {
+                is_ban = false,
+                is_ban_information = true,
+                is_ban_capture_information = true,
+                is_ban_army = false,
+                is_ban_married_information = true,
+                is_ban_release_information = true
+            });
+            availablePresets.Add("{=1tyEv1iZh5}ban army and info", () => new mod_setting
+            {
+                is_ban = false,
+                is_ban_release_information = true,
+                is_ban_army = true,
+                is_ban_capture_information = true,
+                is_ban_information = true,
+                is_ban_married_information = true
+            });
+            availablePresets.Add("{=tired_party_setting_do_not}ban mod", () => new mod_setting
+            {
+                is_ban = true,
+                is_ban_married_information = true,
+                is_ban_information = true,
+                is_ban_army = true,
+                is_ban_capture_information = true,
+                is_ban_release_information = true
+            });
+            return availablePresets;
+        }
     }
 }

@@ -80,8 +80,7 @@ namespace Tired_party.Behaviors
                     float value_settlement = party.Key.CurrentSettlement != null ? 1.2f : 1f;
                     if (party.Key.IsMainParty)
                     {
-                        if(party.Key.DefaultBehavior == AiBehavior.Hold || party.Key.AtCampMode
-                          || party.Key.Position2D == party.Key.TargetPosition || !party.Key.IsMoving)
+                        if(party.Key.Army != null ? is_not_move(party.Key.Army.LeaderParty) : is_not_move(party.Key))
                         {
                             party.Value.Now += value_event * value_settlement * (is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main : GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main);
                         }
@@ -92,8 +91,7 @@ namespace Tired_party.Behaviors
                     }
                     else
                     {
-                        if (party.Key.DefaultBehavior == AiBehavior.Hold || party.Key.AtCampMode
-                          || party.Key.Position2D == party.Key.TargetPosition || !party.Key.IsMoving)
+                        if (party.Key.Army != null ? is_not_move(party.Key.Army.LeaderParty) : is_not_move(party.Key))
                         {
                             
                             party.Value.Now += value_settlement * value_event * (is_daytime ? GlobalSettings<mod_setting>.Instance.recovery_in_day_time : GlobalSettings<mod_setting>.Instance.recovery_in_night_time);
@@ -156,6 +154,12 @@ namespace Tired_party.Behaviors
                 debug_helper.HandleException(e, methodInfo, "hourly event error");
             }
         
+        }
+
+        public static bool is_not_move(MobileParty party)
+        {
+            return party.DefaultBehavior == AiBehavior.Hold
+                          || party.Position2D == party.TargetPosition || !party.IsMoving;
         }
 
         public override void SyncData(IDataStore dataStore)

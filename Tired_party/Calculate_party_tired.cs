@@ -42,7 +42,11 @@ namespace Tired_party
                 persist_hour = persist_hour * (1 - reduce_rate);
                 persist_rate = 1 / persist_hour;
             }
-            else if(mobile.Army != null && mobile.Army.LeaderParty != mobile)
+            else
+            {
+                persist_rate = calculate_army(mobile);
+            }
+            /*else if(mobile.Army != null && mobile.Army.LeaderParty != mobile)
             {
                 if(!Party_tired.Current.Party_tired_rate.ContainsKey(mobile.Army.LeaderParty))
                 {
@@ -53,7 +57,7 @@ namespace Tired_party
             else
             {
                 persist_rate = calculate_army(mobile);
-            }
+            }*/
             return persist_rate;
         }
 

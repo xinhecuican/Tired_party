@@ -18,13 +18,22 @@ namespace Tired_party.Behaviors
         {
             CampaignEvents.OnPartySizeChangedEvent.AddNonSerializedListener(this, new Action<PartyBase>(on_party_size_changed));
             CampaignEvents.MobilePartyDestroyed.AddNonSerializedListener(this, new Action<MobileParty, PartyBase>(on_mobile_party_destroyed));
-            CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, new Action(weekly_tick));
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(daily_tick));
             CampaignEvents.OnNewGameCreatedEvent9.AddNonSerializedListener(this, new Action(new_game_behavior));
             CampaignEvents.OnPartyRemovedEvent.AddNonSerializedListener(this, new Action<PartyBase>(on_party_remove));
+            CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, new Action(weekly_tick));
         }
 
         public override void SyncData(IDataStore dataStore)
         {
+        }
+
+        private void weekly_tick()
+        {
+            for(int i=0; i<Party_tired.Current.information.Count; i++)
+            {
+                Party_tired.Current.information[i].delete_outdated_information();
+            }
         }
 
         private void on_party_remove(PartyBase partyBase)
@@ -67,7 +76,7 @@ namespace Tired_party.Behaviors
             }
         }
 
-        private void weekly_tick()
+        private void daily_tick()
         {
             MBReadOnlyList<MobileParty> parties = Campaign.Current.MobileParties;
             for(int i=0; i<parties.Count; i++)

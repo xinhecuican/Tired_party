@@ -19,6 +19,7 @@ namespace Tired_party.Save
             AddClassDefinition(typeof(Party_tired), 1);
             AddClassDefinition(typeof(tired_party_data), 2);
             AddClassDefinition(typeof(information_data), 3);
+            AddClassDefinition(typeof(MCMsetting_data), 4);
         }
 
         protected override void DefineContainerDefinitions()

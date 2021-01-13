@@ -1,4 +1,5 @@
-﻿using MCM.Utils;
+﻿using MCM.Abstractions.Settings.Base.Global;
+using MCM.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,19 @@ namespace Tired_party.Save
             {
                 party.Information.Add(data);
             }
+            mcm_data.is_ban = GlobalSettings<mod_setting>.Instance.is_ban;
+            mcm_data.is_ban_army = GlobalSettings<mod_setting>.Instance.is_ban_army;
+            mcm_data.is_ban_capture_information = GlobalSettings<mod_setting>.Instance.is_ban_capture_information;
+            mcm_data.is_ban_information = GlobalSettings<mod_setting>.Instance.is_ban_information;
+            mcm_data.is_ban_married_information = GlobalSettings<mod_setting>.Instance.is_ban_married_information;
+            mcm_data.is_ban_release_information = GlobalSettings<mod_setting>.Instance.is_ban_release_information;
+            mcm_data.limit_speed = GlobalSettings<mod_setting>.Instance.limit_speed;
+            mcm_data.morale_reduce = GlobalSettings<mod_setting>.Instance.morale_reduce;
+            mcm_data.persist_time = GlobalSettings<mod_setting>.Instance.persist_time;
+            mcm_data.recovery_in_day_time = GlobalSettings<mod_setting>.Instance.recovery_in_day_time;
+            mcm_data.recovery_in_day_time_main = GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main;
+            mcm_data.recovery_in_night_time = GlobalSettings<mod_setting>.Instance.recovery_in_night_time;
+            mcm_data.recovery_in_night_time_main = GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main;
         }
 
         private void LoadData(CampaignGameStarter starter)
@@ -49,6 +63,19 @@ namespace Tired_party.Save
             {
                 Party_tired.Current.Information.Add(data);
             }
+            GlobalSettings<mod_setting>.Instance.is_ban = mcm_data.is_ban  ;
+            GlobalSettings<mod_setting>.Instance.is_ban_army = mcm_data.is_ban_army ;
+            GlobalSettings<mod_setting>.Instance.is_ban_capture_information = mcm_data.is_ban_capture_information ;
+            GlobalSettings<mod_setting>.Instance.is_ban_information = mcm_data.is_ban_information ;
+            GlobalSettings<mod_setting>.Instance.is_ban_married_information = mcm_data.is_ban_married_information ;
+            GlobalSettings<mod_setting>.Instance.is_ban_release_information = mcm_data.is_ban_release_information ;
+            GlobalSettings<mod_setting>.Instance.limit_speed = mcm_data.limit_speed  ;
+            GlobalSettings<mod_setting>.Instance.morale_reduce = mcm_data.morale_reduce  ;
+            GlobalSettings<mod_setting>.Instance.persist_time = mcm_data.persist_time  ;
+            GlobalSettings<mod_setting>.Instance.recovery_in_day_time = mcm_data.recovery_in_day_time  ;
+            GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main = mcm_data.recovery_in_day_time_main  ;
+            GlobalSettings<mod_setting>.Instance.recovery_in_night_time = mcm_data.recovery_in_night_time  ;
+            GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main = mcm_data.recovery_in_night_time_main  ;
         }
 
         
@@ -59,6 +86,7 @@ namespace Tired_party.Save
             {
                 dataStore.SyncData("tired_party_data", ref party._party_tired_rate);
                 dataStore.SyncData("tired_party_information_data", ref party.information);
+                dataStore.SyncData("tired_party_mcm", ref mcm_data);
                 
             }
             catch (Exception)
@@ -70,6 +98,7 @@ namespace Tired_party.Save
             }
         }
         public static Party_tired party = new Party_tired();
+        public static MCMsetting_data mcm_data = new MCMsetting_data();
        
     }
 }

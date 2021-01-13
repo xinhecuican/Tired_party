@@ -33,29 +33,87 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\DiplomacyFixes\bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Harmony-2006-v2-0-4-2-1606074168\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="MCM.NexusMods">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.NexusMods.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.4.3">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.4.3.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4.Implementation.MCMv3">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.MCMv3\bin\Win64_Shipping_Client\MCMv4.Implementation.MCMv3.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.0">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.0.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4.Implementation.ModLib">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\MCMv4.Implementation.ModLib.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.1">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.1.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4.UI">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.UI.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.2">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.2.dll</HintPath>
     </Reference>
-    <Reference Include="ModLib">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.3">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.3.dll</HintPath>
     </Reference>
-    <Reference Include="ModLib.Definitions">
-      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.Definitions.dll</HintPath>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.4">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.4.dll</HintPath>
+    </Reference>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.5">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.5.dll</HintPath>
+    </Reference>
+    <Reference Include="Bannerlord.ButterLib.Implementation.1.5.6">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Bannerlord.ButterLib.Implementation.1.5.6.dll</HintPath>
+    </Reference>
+    <Reference Include="Bannerlord.Harmony">
+      <HintPath>G:\Mount &amp; Blade mods\Harmony-2006-v2-0-4-2-1606074168\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\Bannerlord.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Bannerlord.UIExtenderEx">
+      <HintPath>G:\Mount &amp; Blade mods\UIExtenderEx-2102-v1-1-0-1609708831\Modules\Bannerlord.UIExtenderEx\bin\Win64_Shipping_Client\Bannerlord.UIExtenderEx.dll</HintPath>
+    </Reference>
+    <Reference Include="MCM.NexusMods, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.NexusMods.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv4, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv4.Implementation.ModLib, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\MCMv4.Implementation.ModLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MCMv4.UI, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="ModLib, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ModLib.Definitions, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\ModLib.Definitions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -72,8 +130,29 @@
     <Reference Include="SandBox.ViewModelCollection">
       <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.ViewModelCollection.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Extensions.Logging">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Serilog.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File">
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -294,6 +373,7 @@
     <Compile Include="Patch\InformationVM_patch.cs" />
     <Compile Include="Patch\notification_patch.cs" />
     <Compile Include="Save\MBsave_behavior.cs" />
+    <Compile Include="Save\MCMsetting_data.cs" />
     <Compile Include="Save\tired_save_definer.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
