@@ -37,7 +37,8 @@ namespace Tired_party.Save
             {
                 party.Information.Add(data);
             }
-            mcm_data.is_ban = GlobalSettings<mod_setting>.Instance.is_ban;
+            mcm_data.save_data();
+            /*mcm_data.is_ban = GlobalSettings<mod_setting>.Instance.is_ban;
             mcm_data.is_ban_army = GlobalSettings<mod_setting>.Instance.is_ban_army;
             mcm_data.is_ban_capture_information = GlobalSettings<mod_setting>.Instance.is_ban_capture_information;
             mcm_data.is_ban_information = GlobalSettings<mod_setting>.Instance.is_ban_information;
@@ -49,7 +50,7 @@ namespace Tired_party.Save
             mcm_data.recovery_in_day_time = GlobalSettings<mod_setting>.Instance.recovery_in_day_time;
             mcm_data.recovery_in_day_time_main = GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main;
             mcm_data.recovery_in_night_time = GlobalSettings<mod_setting>.Instance.recovery_in_night_time;
-            mcm_data.recovery_in_night_time_main = GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main;
+            mcm_data.recovery_in_night_time_main = GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main;*/
         }
 
         private void LoadData(CampaignGameStarter starter)
@@ -63,7 +64,8 @@ namespace Tired_party.Save
             {
                 Party_tired.Current.Information.Add(data);
             }
-            GlobalSettings<mod_setting>.Instance.is_ban = mcm_data.is_ban  ;
+            mcm_data.load_data();
+            /*GlobalSettings<mod_setting>.Instance.is_ban = mcm_data.is_ban  ;
             GlobalSettings<mod_setting>.Instance.is_ban_army = mcm_data.is_ban_army ;
             GlobalSettings<mod_setting>.Instance.is_ban_capture_information = mcm_data.is_ban_capture_information ;
             GlobalSettings<mod_setting>.Instance.is_ban_information = mcm_data.is_ban_information ;
@@ -75,7 +77,7 @@ namespace Tired_party.Save
             GlobalSettings<mod_setting>.Instance.recovery_in_day_time = mcm_data.recovery_in_day_time  ;
             GlobalSettings<mod_setting>.Instance.recovery_in_day_time_main = mcm_data.recovery_in_day_time_main  ;
             GlobalSettings<mod_setting>.Instance.recovery_in_night_time = mcm_data.recovery_in_night_time  ;
-            GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main = mcm_data.recovery_in_night_time_main  ;
+            GlobalSettings<mod_setting>.Instance.recovery_in_night_time_main = mcm_data.recovery_in_night_time_main  ;*/
         }
 
         

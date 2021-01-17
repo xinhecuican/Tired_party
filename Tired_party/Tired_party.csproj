@@ -366,7 +366,9 @@
     <Compile Include="Helper\log_helper.cs" />
     <Compile Include="Helper\message_helper.cs" />
     <Compile Include="Information_Screen\information_data.cs" />
+    <Compile Include="Model\combat_state_model.cs" />
     <Compile Include="Model\Morale_model.cs" />
+    <Compile Include="Model\tired_party_combat_simulate_model.cs" />
     <Compile Include="Model\Tired_party_speed_model.cs" />
     <Compile Include="mod_setting.cs" />
     <Compile Include="Party_tired.cs" />

@@ -70,9 +70,15 @@ namespace Tired_party
 
         [SettingPropertyBool("{=tired_party_setting_do_not_army}ban army effect", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
-        public bool is_ban_army { get; set; } 
+        public bool is_ban_army { get; set; }
 
-        
+        [SettingPropertyBool("{=mGgNLINDxt}ban simulation effect", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
+        public bool is_ban_simulation_effect { get; set; }
+
+        [SettingPropertyBool("{=fMmqFEsKab}ban combat effect", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
+        public bool is_ban_combat_effect { get; set; }
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
@@ -98,9 +104,13 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float persist_time { get; set; } = 3f;
 
-        [SettingPropertyFloatingInteger("{=WxqpKxSZ63}morale rate", 0.5f, 2f, "0.00", Order = 6, RequireRestart = false, HintText = "{=tX3M9pnZ4L}an argument when calculate morale")]
+        [SettingPropertyFloatingInteger("{=MXKVpEX3sC}morale rate", 0.5f, 2f, "0.00", Order = 7, RequireRestart = false, HintText = "{=wmnGvImuLp}an argument when calculate morale")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float morale_reduce { get; set; } = 1f;
+
+        [SettingPropertyFloatingInteger("{=WxqpKxSZ63}combat effect rate", 0.5f, 2f, "0.00", Order = 8, RequireRestart = false, HintText = "{=tX3M9pnZ4L}affect combat speed、accuracy etc")]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
+        public float combat_effect_rate { get; set; } = 1f;
 
         [SettingPropertyBool("{=jDamJPB6mC}don't show information left", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]

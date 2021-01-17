@@ -158,8 +158,11 @@ namespace Tired_party.Behaviors
 
         public static bool is_not_move(MobileParty party)
         {
-            return party.DefaultBehavior == AiBehavior.Hold
-                          || party.Position2D == party.TargetPosition || !party.IsMoving;
+            
+            bool flag_busy = Party_tired.Current.Party_tired_rate.ContainsKey(party) ? Party_tired.Current.Party_tired_rate[party].is_busy : false;
+            bool flag_besige_fight = party.BesiegerCamp != null ? party.BesiegerCamp.IsReadyToBesiege : false;
+            return (party.DefaultBehavior == AiBehavior.Hold
+                          || party.Position2D == party.TargetPosition || !party.IsMoving) && (!flag_busy && !flag_besige_fight);
         }
 
         public override void SyncData(IDataStore dataStore)

@@ -1,5 +1,6 @@
 using HarmonyLib;
 using MCM.Abstractions.Settings.Base.Global;
+using SandBox;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,7 @@ using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
+using TaleWorlds.Diamond;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
 using TaleWorlds.InputSystem;
@@ -103,6 +105,14 @@ namespace Tired_party
                     if(list[i] is DefaultPartyMoraleModel)
                     {
                         list[i] = new Morale_model();
+                    }
+                    if(list[i] is DefaultCombatSimulationModel && !GlobalSettings<mod_setting>.Instance.is_ban_simulation_effect)
+                    {
+                        list[i] = new tired_party_combat_simulate_model();
+                    }
+                    if(list[i] is SandboxAgentStatCalculateModel && !GlobalSettings<mod_setting>.Instance.is_ban_combat_effect)
+                    {
+                        list[i] = new combat_state_model();
                     }
                 }
             }
@@ -244,7 +254,7 @@ namespace Tired_party
 
         protected override void OnApplicationTick(float dt)
         {
-            //this.On_key_press();
+            this.On_key_press();
         }
         private void On_key_press()
         {

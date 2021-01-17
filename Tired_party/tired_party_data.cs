@@ -41,6 +41,8 @@ namespace Tired_party
         public bool need_reset_army = false;
         [SaveableField(14)]
         public int reset_time;
+        [SaveableField(15)]
+        public bool is_busy;
 
         public int Limit { get { return _limit; } set{ _limit = value; } }
         public int Number { get { return _number; } set { if (value < 0) { _number = 0; } else { _number = value; } } }
@@ -96,6 +98,8 @@ namespace Tired_party
             Limit = 0;
             Morale = 0;
             reset_time = 0;
+            is_busy = false;
+
         }
 
         public tired_party_data()
@@ -107,6 +111,8 @@ namespace Tired_party
             Limit = 0;
             Morale = 0;
             reset_time = 0;
+            is_busy = false;
+
         }
     }
 }
