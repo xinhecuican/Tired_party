@@ -108,17 +108,17 @@ namespace Tired_party.Behaviors
                     }
                     else if (party.Value.Now <= 0.3)
                     {
-                        party.Value.Morale += 0.3f - party.Value.Now;
+                        party.Value.Morale += 3 * (0.3f - party.Value.Now);
                     }
                     else if (party.Value.Morale > 1e-8)
                     {
                         if (party.Value.Morale > 0)
                         {
-                            party.Value.Morale = party.Value.Morale - 0.3f < 0 ? 0 : party.Value.Morale - 0.3f;
+                            party.Value.Morale = party.Value.Morale - 0.3f < 0 ? 0 : party.Value.Morale - 1f;
                         }
                         else
                         {
-                            party.Value.Morale = party.Value.Morale + 0.3f > 0 ? 0 : party.Value.Morale + 0.3f;
+                            party.Value.Morale = party.Value.Morale + 0.3f > 0 ? 0 : party.Value.Morale + 1f;
                         }
                     }
 
@@ -158,7 +158,6 @@ namespace Tired_party.Behaviors
 
         public static bool is_not_move(MobileParty party)
         {
-            
             bool flag_busy = Party_tired.Current.Party_tired_rate.ContainsKey(party) ? Party_tired.Current.Party_tired_rate[party].is_busy : false;
             bool flag_besige_fight = party.BesiegerCamp != null ? party.BesiegerCamp.IsReadyToBesiege : false;
             return (party.DefaultBehavior == AiBehavior.Hold

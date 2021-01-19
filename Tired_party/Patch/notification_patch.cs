@@ -16,28 +16,21 @@ namespace Tired_party.Patch
     class notification_patch
     {
         [HarmonyPatch("OnPrisonerTaken")]
-        [HarmonyPrepare]
+        [HarmonyPrefix]
         public static bool on_prison_taken_fix(DefaultNotificationsCampaignBehavior __instance, PartyBase capturer, Hero prisoner)
         {
             return !GlobalSettings<mod_setting>.Instance.is_ban_capture_information;
         }
 
-        [HarmonyPatch("OnPrisonerTaken")]
-        [HarmonyPrefix]
-        public static void prefix(DefaultNotificationsCampaignBehavior __instance, PartyBase capturer, Hero prisoner)
-        {
-            InformationManager.DisplayMessage(new InformationMessage("啦啦啦"));
-        }
-
         [HarmonyPatch("OnPrisonerReleased")]
-        [HarmonyPrepare]
+        [HarmonyPrefix]
         public static bool on_prison_release_fix(Hero hero, PartyBase party, IFaction capturerFaction, EndCaptivityDetail detail)
         {
             return !GlobalSettings<mod_setting>.Instance.is_ban_release_information || (hero.Clan != Clan.PlayerClan);
         }
 
         [HarmonyPatch("OnHeroesMarried")]
-        [HarmonyPrepare]
+        [HarmonyPrefix]
         public static bool on_heros_merried_fix(Hero firstHero, Hero secondHero, bool showNotification)
         {
             return !GlobalSettings<mod_setting>.Instance.is_ban_married_information;

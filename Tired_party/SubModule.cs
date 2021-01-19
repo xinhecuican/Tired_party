@@ -292,6 +292,7 @@ namespace Tired_party
                         InformationManager.DisplayMessage(new InformationMessage(party.TargetSettlement.Name.ToString()));
                     }*/
                     InformationManager.DisplayMessage(new InformationMessage(party.DefaultBehavior.ToString()));
+                    InformationManager.DisplayMessage(new InformationMessage(party.LeaderHero.GetSkillValue(DefaultSkills.Tactics).ToString(), Colors.Yellow));
 
                     if(party != null && Party_tired.Current.Party_tired_rate.ContainsKey(party))
                     {

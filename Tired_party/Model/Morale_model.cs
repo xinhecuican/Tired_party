@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
+using TaleWorlds.Localization;
 
 namespace Tired_party.Model
 {
@@ -32,7 +33,8 @@ namespace Tired_party.Model
                 {
                     return base_ans;
                 }
-                explainedNumber.Add(-(Party_tired.Current.Party_tired_rate[mobileParty].Morale * GlobalSettings<mod_setting>.Instance.morale_reduce));
+                float morale_num = Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) ? Party_tired.Current.Party_tired_rate[mobileParty].Morale : 0f;
+                explainedNumber.Add(-(morale_num * GlobalSettings<mod_setting>.Instance.morale_reduce), new TextObject("tired party"));
                 return explainedNumber.ResultNumber;
             }
             return base_ans;

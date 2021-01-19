@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
@@ -17,7 +18,6 @@ namespace Tired_party.Model
         public override int SimulateHit(CharacterObject strikerTroop, CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty, float strikerAdvantage, MapEvent battle)
         {
             float num = base.SimulateHit(strikerTroop, strikedTroop, strikerParty, strikedParty, strikerAdvantage, battle);
-            
             ExplainedNumber explainedNumber = new ExplainedNumber((float)num, null);
             float strikeradvantage = 1f;
             float strikedadvantage = 1f;
@@ -39,11 +39,25 @@ namespace Tired_party.Model
             {
                 explainedNumber.AddFactor((float)Math.Pow((strikerAdvantage - strikedadvantage - 0.2) / 1, 4), new TextObject("tired influence"));
             }
-            else if(strikedadvantage - strikerAdvantage > 0.2f)
-            {
-                explainedNumber.AddFactor((float)Math.Pow((strikedadvantage - strikerAdvantage - 0.2) / 1, 4), new TextObject("tired influence"));
-            }
+            
             return (int)explainedNumber.ResultNumber;
         }
+
+        public override float GetMaximumSiegeEquipmentProgress(Settlement settlement)
+        {
+            return base.GetMaximumSiegeEquipmentProgress(settlement);
+        }
+
+        public override int GetNumberOfEquipmentsBuilt(Settlement settlement)
+        {
+            return base.GetNumberOfEquipmentsBuilt(settlement);
+        }
+
+        public override float GetSettlementAdvantage(Settlement settlement)
+        {
+            return base.GetSettlementAdvantage(settlement);
+        }
+
+        
     }
 }
