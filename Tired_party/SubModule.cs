@@ -1,6 +1,7 @@
 using HarmonyLib;
 using MCM.Abstractions.Settings.Base.Global;
 using SandBox;
+using StoryMode;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +21,10 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI;
+using TaleWorlds.TwoDimension;
 using Tired_party.Behaviors;
 using Tired_party.Helper;
+using Tired_party.Information_Screen;
 using Tired_party.Model;
 using Tired_party.Save;
 
@@ -29,7 +32,9 @@ namespace Tired_party
 {
     public class SubModule : MBSubModuleBase
     {
-        
+        public static TextObject menu_close = new TextObject("{=BnePFn4jE6}Exit", null);
+        public static TextObject menu_cancel = new TextObject("{=ybgznSENV2}Done", null);
+        public static TextObject title = new TextObject("{=2l0MyiIYvS}Information Screen", null);
 
         /// <summary>
         /// 游戏处于加载界面时最先被调用的函数，你应该在这个函数中完成初始化的主要部分
@@ -50,10 +55,23 @@ namespace Tired_party
 
         protected override void OnGameStart(Game game, IGameStarter gameStarter)
         {
-            CampaignGameStarter campaign_game_starter = gameStarter as CampaignGameStarter;
-            if(campaign_game_starter != null)
+            base.OnGameStart(game, gameStarter);
+            try
             {
-                InitializeGame(game, (IGameStarter)campaign_game_starter);
+                bool flag = !(game.GameType is Campaign);
+                if (!flag)
+                {
+                    bool flag2 = !(gameStarter is CampaignGameStarter);
+                    if (!flag2)
+                    {
+                        InitializeGame(game, (IGameStarter)gameStarter);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                MethodInfo methodInfo = MethodBase.GetCurrentMethod() as MethodInfo;
+                debug_helper.HandleException(e, methodInfo, "submodule load error");
             }
         }
 
@@ -61,7 +79,15 @@ namespace Tired_party
         {
             
         }
-        
+
+        public override void OnGameEnd(Game game)
+        {
+            base.OnGameEnd(game);
+            InformationManager.OnAddTooltipInformation -= add_information;
+            InformationManager.DisplayMessageInternal -= store_info;
+            InformationManager.FiringQuickInformation -= store_quick;
+        }
+
         private void InitializeGame(Game game, IGameStarter gameStarter)
         {
             Initialize();
@@ -72,6 +98,9 @@ namespace Tired_party
         private void Initialize()
         {
             Party_tired.Current = new Party_tired();
+            InformationManager.OnAddTooltipInformation += add_information;
+            InformationManager.DisplayMessageInternal += store_info;
+            InformationManager.FiringQuickInformation += store_quick;
         }
 
         private void AddBehaviours(CampaignGameStarter starter)
@@ -96,7 +125,7 @@ namespace Tired_party
             bool flag = list != null;
             if (flag)
             {
-                for(int i=0; i<list.Count; i++)
+                /*for(int i=0; i<list.Count; i++)
                 {
                     if(list[i] is DefaultPartySpeedCalculatingModel)
                     {
@@ -114,30 +143,36 @@ namespace Tired_party
                     {
                         list[i] = new combat_state_model();
                     }
-                }
+                }*/
+                starter.AddModel(new Tired_party_speed_model());
+                starter.AddModel(new Morale_model());
+                starter.AddModel(new tired_party_combat_simulate_model());
+                starter.AddModel(new combat_state_model());
             }
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
-            InformationManager.OnAddTooltipInformation += add_information;
-            InformationManager.DisplayMessageInternal += store_info;
-            InformationManager.FiringQuickInformation += store_quick;
         }
 
-        private void store_quick(string  message, int priorty = 0, BasicCharacterObject announcerCharacter = null, string soundEventPath = "")
+        private void store_quick(string message, int priorty = 0, BasicCharacterObject announcerCharacter = null, string soundEventPath = "")
         {
-            Party_tired.Current.information[0].add_information(message, (float)CampaignTime.Now.ToHours);
+            Party_tired.Current.information[0].add_information(message, (float)Campaign.CurrentTime);
+            Party_tired.Current.information[2].add_information(message, (float)Campaign.CurrentTime);
         }
 
         private void store_info(InformationMessage information)
         {
-            Party_tired.Current.information[0].add_information(information.ToString(), (float)CampaignTime.Now.ToHours);
+            Party_tired.Current.information[0].add_information(information.Information, (float)Campaign.CurrentTime);
+            using (StreamWriter sw = new StreamWriter("F:/user_setting/Desktop/harmony.log.txt"))
+            {
+                sw.WriteLine(information.ToString() + Campaign.CurrentTime.ToString());
+            }
         }
 
         private void add_information(Type type, object[] args)
         {
-            if(GlobalSettings<mod_setting>.Instance.is_ban || GlobalSettings<mod_setting>.Instance.is_ban_information)
+            if (GlobalSettings<mod_setting>.Instance.is_ban || GlobalSettings<mod_setting>.Instance.is_ban_information)
             {
                 return;
             }
@@ -145,13 +180,13 @@ namespace Tired_party
             {
                 Army army = (Army)args[0];
                 float army_now_tired = 0;
-                if(last_army == army && Campaign.CurrentTime - last_see_hour_army <= 1)
+                if (last_army == army && Campaign.CurrentTime - last_see_hour_army <= 1)
                 {
                     return;
                 }
-                if(!Party_tired.Current.Party_tired_rate.ContainsKey(army.LeaderParty))
+                if (!Party_tired.Current.Party_tired_rate.ContainsKey(army.LeaderParty))
                 {
-                    if(BannerlordConfig.Language.Equals("简体中文"))
+                    if (BannerlordConfig.Language.Equals("简体中文"))
                         message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + "没有加入");
                     else
                         message_helper.ErrorMessage(army.LeaderParty.Name.ToString() + " don't add");
@@ -173,22 +208,22 @@ namespace Tired_party
                     army_now_tired -= Party_tired.Current.Party_tired_rate[army.LeaderParty].Reduce_rate;
                 }
                 last_army = army;
-                last_see_hour_army =  Campaign.CurrentTime;
-                if(BannerlordConfig.Language.Equals("简体中文"))
-                    message_helper.TechnicalMessage(army.Name.ToString() + "还剩" + remain_hours + "小时("+show_information(temp)+")");
+                last_see_hour_army = Campaign.CurrentTime;
+                if (BannerlordConfig.Language.Equals("简体中文"))
+                    message_helper.TechnicalMessage(army.Name.ToString() + "还剩" + remain_hours + "小时(" + show_information(temp) + ")");
                 else
                     message_helper.TechnicalMessage(army.Name.ToString() + " remain " + remain_hours + " hours(" + show_information(temp) + ")");
             }
             if (type == typeof(MobileParty))
             {
                 MobileParty mobile = (MobileParty)args[0];
-                if(last_party == mobile && Campaign.CurrentTime - last_see_hour <= 1)
+                if (last_party == mobile && Campaign.CurrentTime - last_see_hour <= 1)
                 {
                     return;
                 }
                 last_party = mobile;
                 last_see_hour = Campaign.CurrentTime;
-                
+
                 if (Party_tired.Current.Party_tired_rate.ContainsKey(mobile))
                 {
                     if (BannerlordConfig.Language.Equals("简体中文"))
@@ -202,9 +237,9 @@ namespace Tired_party
                         " hours(" + show_information(Party_tired.Current.Party_tired_rate[mobile].Now) + ")");
                     }
                 }
-                else if(!mobile.IsCaravan && !mobile.IsVillager)
+                else if (!mobile.IsCaravan && !mobile.IsVillager)
                 {
-                    if(BannerlordConfig.Language.Equals("简体中文"))
+                    if (BannerlordConfig.Language.Equals("简体中文"))
                         message_helper.ErrorMessage(mobile.Name.ToString() + "没有加入");
                     else
                         message_helper.ErrorMessage(mobile.Name.ToString() + " don't add");
@@ -219,7 +254,7 @@ namespace Tired_party
         private string show_information(float rate)
         {
             bool language_is_chinese = BannerlordConfig.Language.Equals("简体中文");
-            if(rate > 0.9)
+            if (rate > 0.9)
             {
                 if (language_is_chinese)
                 {
@@ -230,44 +265,51 @@ namespace Tired_party
             }
             else if (rate > 0.3)
             {
-                if(language_is_chinese)
+                if (language_is_chinese)
                     return "正常";
                 else
                     return "normal";
             }
-            else if(rate > 0)
+            else if (rate > 0)
             {
-                if(language_is_chinese)
+                if (language_is_chinese)
                     return "疲惫";
                 else
                     return "tired";
             }
             else
             {
-                if(language_is_chinese)
+                if (language_is_chinese)
                     return "濒临崩溃";
                 else
                     return "Near collapse";
             }
         }
 
-
         protected override void OnApplicationTick(float dt)
         {
-            this.On_key_press();
+           this.On_key_press();
         }
         private void On_key_press()
         {
-            bool flag = Input.IsKeyDown(InputKey.G);
+            bool flag = Input.IsKeyDown(InputKey.M) && Input.IsKeyDown(InputKey.LeftAlt);
             bool flag2 = Game.Current != null && Game.Current.GameStateManager != null
                 && Game.Current.GameStateManager.ActiveState != null && Game.Current.GameStateManager.ActiveState.GetType() == typeof(MapState)
                 && !Game.Current.GameStateManager.ActiveState.IsMission && !Game.Current.GameStateManager.ActiveState.IsMenuState;
             bool flag3 = flag && flag2;
             if (flag3)
             {
-                InformationManager.ShowTextInquiry(new TextInquiryData("party message", "enter name", true, true, "yes", "no", yes_action, null));
+                if(!SubModule.information_screen_is_open)
+                {
+                    _screen = new Tired_information_screen();
+                    ScreenManager.PushScreen(_screen);
+                    information_screen_is_open = true;
+                }
+                //InformationManager.ShowTextInquiry(new TextInquiryData("party message", "enter name", true, true, "yes", "no", yes_action, null));
             }
         }
+        private static Tired_information_screen _screen;
+        public static bool information_screen_is_open = false;
 
         void yes_action(string s)
         {

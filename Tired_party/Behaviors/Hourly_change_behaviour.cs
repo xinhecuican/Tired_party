@@ -124,14 +124,14 @@ namespace Tired_party.Behaviors
 
                     if(party.Key == Campaign.Current.MainParty)
                     {
-                        if (party.Value.Now < 0.5f && CampaignTime.Now.GetHourOfDay % 6 == 0)
+                        if (party.Value.Now < 0.5f  && party.Value.Now >= 0.3f&& CampaignTime.Now.GetHourOfDay % 6 == 0)
                         {
                             if(BannerlordConfig.Language.Equals("简体中文"))
                                 message_helper.SimpleMessage("部队还剩" + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + "小时达到极限");
                             else
                                 message_helper.SimpleMessage("party remain " + Calculate_party_tired.calculate_remaining_hours(party.Value).ToString() + " hours");
                         }
-                        else if(party.Value.Now < 0.3f && CampaignTime.Now.GetHourOfDay % 3 == 0)
+                        else if(party.Value.Now < 0.3f  && party.Value.Now > 0f && CampaignTime.Now.GetHourOfDay % 3 == 0)
                         {
                             if(BannerlordConfig.Language.Equals("简体中文"))
                                 message_helper.TechnicalMessage("部队还剩"+Calculate_party_tired.calculate_remaining_hours(party.Value).ToString()+"小时达到极限");

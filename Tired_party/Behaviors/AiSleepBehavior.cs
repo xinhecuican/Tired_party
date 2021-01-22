@@ -171,6 +171,12 @@ namespace Tired_party.Behaviors
                     }
                     if (Party_tired.Current.Party_tired_rate[mobileParty].reset_time == 0)
                     {
+                        if(mobileParty.IsMainParty)
+                        {
+                            Campaign.Current.SetTimeControlModeLock(false);
+                            Campaign.Current.TimeControlMode = CampaignTimeControlMode.Stop;
+                        }
+                        Party_tired.Current.Party_tired_rate[mobileParty].is_fleeing = false;
                         Party_tired.Current.Party_tired_rate[mobileParty].is_busy = false;
                         Party_tired.ToggleTent(mobileParty.Party, false);
                     }
@@ -195,6 +201,13 @@ namespace Tired_party.Behaviors
                     else if (Party_tired.Current.Party_tired_rate[mobileParty].Limit >= 24 * (1 + (mobileParty.LeaderHero != null ? Math.Pow(mobileParty.LeaderHero.GetSkillValue(DefaultSkills.Charm) / 300f, 1.2) : 0)))
                     {
                         mobileParty.SetMoveModeHold();
+                        Party_tired.Current.Party_tired_rate[mobileParty].reset_time += 3;
+                        Party_tired.ToggleTent(mobileParty.Party, true);
+                        Campaign.Current.SetTimeControlModeLock(false);
+                        Campaign.Current.TimeControlMode = CampaignTimeControlMode.UnstoppableFastForward;
+                        Campaign.Current.SetTimeControlModeLock(true);
+                        Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
+                        return;
                     }
                 }
                 else
@@ -277,6 +290,10 @@ namespace Tired_party.Behaviors
                 {
                     store_party_state(mobileParty);
                     Party_tired.Current.Party_tired_rate[mobileParty].need_recovery = true;
+                    if(flag_flee_to_point_behavior)
+                    {
+                        Party_tired.Current.Party_tired_rate[mobileParty].is_fleeing = true;
+                    }
                     if (flag_go_to_someplace_behavior)
                     {
                         Party_tired.Current.Party_tired_rate[mobileParty].reset_time += sleep_hours(mobileParty);

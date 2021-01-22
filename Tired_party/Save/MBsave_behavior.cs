@@ -33,9 +33,9 @@ namespace Tired_party.Save
                 party.Party_tired_rate[key.Key] = key.Value;
             }
             party.information.Clear();
-            foreach(information_data data in Party_tired.Current.Information)
+            for(int i=0; i<Party_tired.Current.information.Count; i++)
             {
-                party.Information.Add(data);
+                party.information.Add(Party_tired.Current.information[i]);
             }
             mcm_data.save_data();
             /*mcm_data.is_ban = GlobalSettings<mod_setting>.Instance.is_ban;
@@ -59,7 +59,7 @@ namespace Tired_party.Save
             {
                 Party_tired.Current.Party_tired_rate[key.Key] = key.Value;
             }
-
+            Party_tired.Current.information.Clear();
             foreach(information_data data in party.Information)
             {
                 Party_tired.Current.Information.Add(data);

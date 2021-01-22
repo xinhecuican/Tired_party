@@ -112,7 +112,7 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float combat_effect_rate { get; set; } = 1f;
 
-        [SettingPropertyBool("{=jDamJPB6mC}don't show information left", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyBool("{=jDamJPB6mC}don't show information left(can't use)", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]
         public bool is_ban_information { get; set; }
 

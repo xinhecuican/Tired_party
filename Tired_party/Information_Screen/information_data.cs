@@ -11,16 +11,16 @@ using TaleWorlds.TwoDimension;
 
 namespace Tired_party.Information_Screen
 {
-    class information_data
+    public class information_data
     {
         [SaveableField(1)]
-        Dictionary<float, string> data;
+        public Dictionary<float, string> data;
         [SaveableField(2)]
-        public string name;
+        public TextObject name;
 
         
 
-        public information_data(string name)
+        public information_data(TextObject name)
         {
             data = new Dictionary<float, string>();
             this.name = name;

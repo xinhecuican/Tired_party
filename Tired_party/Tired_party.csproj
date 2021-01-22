@@ -139,6 +139,9 @@
     <Reference Include="Serilog.Sinks.File">
       <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Serilog.Sinks.File.dll</HintPath>
     </Reference>
+    <Reference Include="StoryMode">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\StoryMode\bin\Win64_Shipping_Client\StoryMode.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -365,14 +368,21 @@
     <Compile Include="Helper\debug_helper.cs" />
     <Compile Include="Helper\log_helper.cs" />
     <Compile Include="Helper\message_helper.cs" />
+    <Compile Include="Information_Screen\InformationDataVM.cs" />
+    <Compile Include="Information_Screen\InformationListVM.cs" />
+    <Compile Include="Information_Screen\InformationVM.cs" />
     <Compile Include="Information_Screen\information_data.cs" />
+    <Compile Include="Information_Screen\information_itemVM.cs" />
+    <Compile Include="Information_Screen\Tired_information_screen.cs" />
     <Compile Include="Model\combat_state_model.cs" />
     <Compile Include="Model\Morale_model.cs" />
     <Compile Include="Model\tired_party_combat_simulate_model.cs" />
     <Compile Include="Model\Tired_party_speed_model.cs" />
     <Compile Include="mod_setting.cs" />
     <Compile Include="Party_tired.cs" />
+    <Compile Include="Patch\Informationmanager_patch.cs" />
     <Compile Include="Patch\InformationVM_patch.cs" />
+    <Compile Include="Patch\mobileparty_patch.cs" />
     <Compile Include="Patch\notification_patch.cs" />
     <Compile Include="Save\MBsave_behavior.cs" />
     <Compile Include="Save\MCMsetting_data.cs" />

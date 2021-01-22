@@ -10,6 +10,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.SaveSystem;
 using Tired_party.Information_Screen;
@@ -24,7 +25,7 @@ namespace Tired_party
         [SaveableField(2)]
         private static Party_tired _party_tired;
         [SaveableField(3)]
-        internal List<information_data> information;
+        public List<information_data> information;
 
         public static float recovery_in_day_time = 0.25f;
         public static float recovery_in_night_time = 0.33f;
@@ -63,7 +64,7 @@ namespace Tired_party
             }
         }
 
-        internal List<information_data> Information { get => information; set => information = value; }
+        public List<information_data> Information { get => information; set => information = value; }
 
         public static void add_to_dict(MobileParty mobileParty, float now_tired = 1)
         {
@@ -84,8 +85,9 @@ namespace Tired_party
         {
             this._party_tired_rate = new Dictionary<MobileParty, tired_party_data>();
 			Information = new List<information_data>();
-			Information.Add(new information_data("{=unxsFo8XOr}all information"));
-			Information.Add(new information_data("{=NLi473iHTH}hidden information"));
+			Information.Add(new information_data(new TextObject("{=unxsFo8XOr}all information", null)));
+			Information.Add(new information_data(new TextObject("{=NLi473iHTH}hidden information", null)));
+			Information.Add(new information_data(new TextObject("{=ylstgZWQuD}important information", null)));
         }
 
 		public static void ToggleTent(PartyBase party, bool showTent)
