@@ -373,6 +373,7 @@
     <Compile Include="Information_Screen\InformationVM.cs" />
     <Compile Include="Information_Screen\information_data.cs" />
     <Compile Include="Information_Screen\information_itemVM.cs" />
+    <Compile Include="Information_Screen\information_node.cs" />
     <Compile Include="Information_Screen\Tired_information_screen.cs" />
     <Compile Include="Model\combat_state_model.cs" />
     <Compile Include="Model\Morale_model.cs" />

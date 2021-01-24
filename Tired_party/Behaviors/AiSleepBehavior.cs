@@ -176,6 +176,7 @@ namespace Tired_party.Behaviors
                             Campaign.Current.SetTimeControlModeLock(false);
                             Campaign.Current.TimeControlMode = CampaignTimeControlMode.Stop;
                         }
+                        mobileParty.Ai.SetDoNotMakeNewDecisions(false);
                         Party_tired.Current.Party_tired_rate[mobileParty].is_fleeing = false;
                         Party_tired.Current.Party_tired_rate[mobileParty].is_busy = false;
                         Party_tired.ToggleTent(mobileParty.Party, false);
@@ -305,6 +306,7 @@ namespace Tired_party.Behaviors
                     Party_tired.Current.Party_tired_rate[mobileParty].is_busy = true;
                     Party_tired.ToggleTent(mobileParty.Party, true);
                     mobileParty.SetMoveModeHold();
+                    mobileParty.Ai.SetDoNotMakeNewDecisions(true);
                 }
 
             }

@@ -19,9 +19,13 @@ namespace Tired_party.Patch
             {
                 return;
             }
-            if(Party_tired.Current.Party_tired_rate.ContainsKey(__instance) && Party_tired.Current.Party_tired_rate[__instance].is_fleeing)
+            if(Party_tired.Current.Party_tired_rate[__instance].is_fleeing)
             {
                 __instance.SetMoveModeHold();
+            }
+            if(Party_tired.Current.Party_tired_rate[__instance].reset_time > 0 && __instance.ShortTermBehavior != AiBehavior.Hold)
+            {
+                Party_tired.ToggleTent(__instance.Party, false);
             }
         }
 

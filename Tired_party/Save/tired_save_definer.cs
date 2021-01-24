@@ -20,7 +20,13 @@ namespace Tired_party.Save
             AddClassDefinition(typeof(tired_party_data), 2);
             AddClassDefinition(typeof(information_data), 3);
             AddClassDefinition(typeof(MCMsetting_data), 4);
+            AddClassDefinition(typeof(information_node), 5);
         }
+
+        /*protected override void DefineStructTypes()
+        {
+            AddStructDefinition(typeof(information_data.node), 5);
+        }*/
 
         protected override void DefineContainerDefinitions()
         {
@@ -28,6 +34,9 @@ namespace Tired_party.Save
             ConstructContainerDefinition(typeof(Dictionary<MobileParty, tired_party_data>));
             ConstructContainerDefinition(typeof(List<information_data>));
             ConstructContainerDefinition(typeof(Dictionary<float, string>));
+            ConstructContainerDefinition(typeof(Queue<information_node>));
         }
+
+        
     }
 }

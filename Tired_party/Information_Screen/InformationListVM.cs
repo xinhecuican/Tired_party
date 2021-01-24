@@ -24,7 +24,7 @@ namespace Tired_party.Information_Screen
                 if(Party_tired.Current.information[i].name.Equals(name))
                 {
                     text = new MBBindingList<InformationDataVM>();
-                    List<string> temp_text = Party_tired.Current.information[i].data.Values.ToList();
+                    /*List<string> temp_text = Party_tired.Current.information[i].data.Values.ToList();
                     List<float> temp_list = Party_tired.Current.information[i].data.Keys.ToList();
                     for(int k=temp_list.Count-1; k>0; k--)
                     {
@@ -36,7 +36,20 @@ namespace Tired_party.Information_Screen
                         {
                             text.Add(new InformationDataVM(temp_text[k], ((int)Math.Floor((Campaign.CurrentTime - temp_list[k]) / 24)).ToString() + new TextObject("{=HTkrMFoJyi}days ago", null).ToString()));
                         }
+                    }*/
+
+                    foreach(var item in Party_tired.Current.information[i].data2.Reverse())
+                    {
+                        if (Math.Floor(Campaign.CurrentTime - item.time) <= 24)
+                        {
+                            text.Add(new InformationDataVM(item.info, ((int)Math.Floor(Campaign.CurrentTime - item.time)).ToString() + new TextObject("{=ue9utZpXrz}hours ago", null).ToString()));
+                        }
+                        else
+                        {
+                            text.Add(new InformationDataVM(item.info, ((int)Math.Floor((Campaign.CurrentTime - item.time) / 24)).ToString() + new TextObject("{=HTkrMFoJyi}days ago", null).ToString()));
+                        }
                     }
+                    text.Reverse();
                     sum = text.Count.ToString();
                     break;
                 }
