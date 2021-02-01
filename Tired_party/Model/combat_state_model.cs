@@ -31,6 +31,7 @@ namespace Tired_party.Model
                 agentDrivenProperties.CombatMaxSpeedMultiplier *= penalty;
                 agentDrivenProperties.WeaponMaxUnsteadyAccuracyPenalty *= (2 - penalty);
                 agentDrivenProperties.ThrustOrRangedReadySpeedMultiplier *= (2 - penalty);
+                agentDrivenProperties.SwingSpeedMultiplier *= penalty;
             }
         }
 

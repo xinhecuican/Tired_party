@@ -176,7 +176,7 @@ namespace Tired_party.Behaviors
                             Campaign.Current.SetTimeControlModeLock(false);
                             Campaign.Current.TimeControlMode = CampaignTimeControlMode.Stop;
                         }
-                        mobileParty.Ai.SetDoNotMakeNewDecisions(false);
+
                         Party_tired.Current.Party_tired_rate[mobileParty].is_fleeing = false;
                         Party_tired.Current.Party_tired_rate[mobileParty].is_busy = false;
                         Party_tired.ToggleTent(mobileParty.Party, false);
@@ -216,8 +216,7 @@ namespace Tired_party.Behaviors
                     Party_tired.Current.Party_tired_rate[mobileParty].Limit = 0;
                 }
 
-                if (
-                    mobileParty.DefaultBehavior == AiBehavior.DefendSettlement || mobileParty.DefaultBehavior == AiBehavior.AssaultSettlement
+                if (mobileParty.DefaultBehavior == AiBehavior.DefendSettlement || mobileParty.DefaultBehavior == AiBehavior.AssaultSettlement
                     || mobileParty.DefaultBehavior == AiBehavior.BesiegeSettlement)
                 {
                     return;
@@ -226,13 +225,14 @@ namespace Tired_party.Behaviors
                 if (Party_tired.Current.Party_tired_rate[mobileParty].need_recovery && mobileParty != Campaign.Current.MainParty)
                 {
                     recover_party_state(mobileParty);
+                    mobileParty.Ai.RethinkAtNextHourlyTick = true;
                     Party_tired.Current.Party_tired_rate[mobileParty].need_recovery = false;
                 }
                 float now_tired = Party_tired.Current.Party_tired_rate[mobileParty].Now;
                 float ans_tired = Party_tired.begin_to_decrease - now_tired > 0 ? (float)Math.Sqrt(Party_tired.begin_to_decrease - now_tired)  * 5 / 3f + 0.49f : (float)Math.Pow(1 - now_tired, 2);
                 bool flag_follow_behavior = (mobileParty.DefaultBehavior == AiBehavior.GoAroundParty && mobileParty.TargetParty != null) || mobileParty.DefaultBehavior == AiBehavior.EscortParty;
                 bool flag_engage_behavior = mobileParty.ShortTermBehavior == AiBehavior.EngageParty;
-                bool flag_go_to_someplace_behavior = mobileParty.DefaultBehavior == AiBehavior.GoToPoint || mobileParty.ShortTermBehavior == AiBehavior.GoToSettlement;
+                bool flag_go_to_someplace_behavior = mobileParty.DefaultBehavior == AiBehavior.GoToPoint || mobileParty.DefaultBehavior == AiBehavior.GoToSettlement || mobileParty.DefaultBehavior == AiBehavior.PatrolAroundPoint;
                 bool flag_flee_to_point_behavior = mobileParty.ShortTermBehavior == AiBehavior.FleeToPoint;
 
                 float ans_engage_behavior = 1f;
@@ -306,7 +306,7 @@ namespace Tired_party.Behaviors
                     Party_tired.Current.Party_tired_rate[mobileParty].is_busy = true;
                     Party_tired.ToggleTent(mobileParty.Party, true);
                     mobileParty.SetMoveModeHold();
-                    mobileParty.Ai.SetDoNotMakeNewDecisions(true);
+
                 }
 
             }

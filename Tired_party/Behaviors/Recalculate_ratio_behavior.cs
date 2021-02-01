@@ -22,12 +22,24 @@ namespace Tired_party.Behaviors
             CampaignEvents.OnNewGameCreatedEvent9.AddNonSerializedListener(this, new Action(new_game_behavior));
             CampaignEvents.OnPartyRemovedEvent.AddNonSerializedListener(this, new Action<PartyBase>(on_party_remove));
             CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, new Action(weekly_tick));
+            CampaignEvents.MobilePartyCreated.AddNonSerializedListener(this, new Action<MobileParty>(mobile_party_create));
         }
 
         public override void SyncData(IDataStore dataStore)
         {
         }
 
+        private void mobile_party_create(MobileParty parties)
+        {
+            if (parties == null || parties.IsCaravan || parties.IsVillager)
+            {
+                return;
+            }
+            if (!Party_tired.Current.Party_tired_rate.ContainsKey(parties))
+            {
+                Party_tired.add_to_dict(parties);
+            }
+        }
         private void weekly_tick()
         {
             for(int i=0; i<Party_tired.Current.information.Count; i++)

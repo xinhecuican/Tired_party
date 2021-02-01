@@ -110,7 +110,7 @@ namespace Tired_party.Behaviors
                     {
                         party.Value.Morale += 3 * (0.3f - party.Value.Now);
                     }
-                    else if (party.Value.Morale > 1e-8)
+                    else if (Math.Abs(party.Value.Morale) > 1e-8)
                     {
                         if (party.Value.Morale > 0)
                         {

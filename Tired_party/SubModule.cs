@@ -1,32 +1,21 @@
 using HarmonyLib;
 using MCM.Abstractions.Settings.Base.Global;
-using SandBox;
-using StoryMode;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Map;
-using TaleWorlds.CampaignSystem.SandBox.GameComponents.Party;
 using TaleWorlds.Core;
-using TaleWorlds.Core.ViewModelCollection;
-using TaleWorlds.Diamond;
-using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.GauntletUI;
-using TaleWorlds.TwoDimension;
 using Tired_party.Behaviors;
 using Tired_party.Helper;
 using Tired_party.Information_Screen;
 using Tired_party.Model;
 using Tired_party.Save;
+using Tired_party.sneak_attack;
 
 namespace Tired_party
 {
@@ -44,7 +33,15 @@ namespace Tired_party
             try
             {
                 base.OnSubModuleLoad();
-                new Harmony("mod.Tired_party").PatchAll();
+                MethodInfo method = typeof(MissionAgentSpawnLogic).Assembly.
+                    GetType("TaleWorlds.MountAndBlade.MissionAgentSpawnLogic+MissionSide").
+                    GetMethod("SpawnTroops", BindingFlags.Instance | BindingFlags.Public);
+                MethodInfo prefix = typeof(spawn_logic_patch).GetMethod("Prefix", BindingFlags.Static | BindingFlags.Public);
+                
+                
+                Harmony harmony = new Harmony("mod.Tired_party");
+                harmony.Patch(method, new HarmonyMethod(prefix), null, null, null);
+                harmony.PatchAll();
             }
             catch(Exception e)
             {
@@ -91,8 +88,11 @@ namespace Tired_party
         private void InitializeGame(Game game, IGameStarter gameStarter)
         {
             Initialize();
-            replace_models(gameStarter as CampaignGameStarter);
-            AddBehaviours(gameStarter as CampaignGameStarter);
+            if (!GlobalSettings<mod_setting>.Instance.is_ban)
+            {
+                replace_models(gameStarter as CampaignGameStarter);
+                AddBehaviours(gameStarter as CampaignGameStarter);
+            }
         }
 
         private void Initialize()
@@ -113,6 +113,7 @@ namespace Tired_party
             starter.AddBehavior(new Recalculate_ratio_behavior());
             starter.AddBehavior(new AiSleepBehavior());
             starter.AddBehavior(new MBsave_behavior());
+            starter.AddBehavior(new gamemenu_beahvior());
         }
 
         private void replace_models(CampaignGameStarter starter)
@@ -164,10 +165,6 @@ namespace Tired_party
         private void store_info(InformationMessage information)
         {
             Party_tired.Current.information[0].add_information(information.Information, (float)Campaign.CurrentTime);
-            using (StreamWriter sw = new StreamWriter("F:/user_setting/Desktop/harmony.log.txt"))
-            {
-                sw.WriteLine(information.ToString() + Campaign.CurrentTime.ToString());
-            }
         }
 
         private void add_information(Type type, object[] args)
@@ -288,7 +285,8 @@ namespace Tired_party
 
         protected override void OnApplicationTick(float dt)
         {
-           this.On_key_press();
+            if(!GlobalSettings<mod_setting>.Instance.is_ban)
+                this.On_key_press();
         }
         private void On_key_press()
         {
@@ -304,8 +302,12 @@ namespace Tired_party
                     _screen = new Tired_information_screen();
                     ScreenManager.PushScreen(_screen);
                     information_screen_is_open = true;
-                }
-                //InformationManager.ShowTextInquiry(new TextInquiryData("party message", "enter name", true, true, "yes", "no", yes_action, null));
+                }             
+            }
+            bool flag4 = Input.IsKeyDown(InputKey.G);
+            if(flag4 && flag2 && GlobalSettings<mod_setting>.Instance.is_ban_debug)
+            {
+                InformationManager.ShowTextInquiry(new TextInquiryData("party message", "enter name", true, true, "yes", "no", yes_action, hide_inquery), true);
             }
         }
         private static Tired_information_screen _screen;
@@ -321,20 +323,12 @@ namespace Tired_party
                 if (party.Name.ToString().Equals(s))
                 {
                     Party_tired.test_party = party;
-                    if(party.Army != null)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("army" + " " + party.Army.AIBehavior.ToString()));
-                    }
-                    if(!party.IsMoving)
-                    {
-                        InformationManager.DisplayMessage(new InformationMessage("party don't move"));
-                    }
                     /*if (party.DefaultBehavior == AiBehavior.GoToSettlement)
                     {
                         InformationManager.DisplayMessage(new InformationMessage(party.TargetSettlement.Name.ToString()));
                     }*/
                     InformationManager.DisplayMessage(new InformationMessage(party.DefaultBehavior.ToString()));
-                    InformationManager.DisplayMessage(new InformationMessage(party.LeaderHero.GetSkillValue(DefaultSkills.Tactics).ToString(), Colors.Yellow));
+                    InformationManager.DisplayMessage(new InformationMessage(MBRandom.RandomFloat.ToString(), Colors.Yellow));
 
                     if(party != null && Party_tired.Current.Party_tired_rate.ContainsKey(party))
                     {
@@ -347,6 +341,12 @@ namespace Tired_party
                     break;
                 }
             }
+            InformationManager.HideInquiry();
+        }
+
+        void hide_inquery()
+        {
+            InformationManager.HideInquiry();
         }
     }
 }

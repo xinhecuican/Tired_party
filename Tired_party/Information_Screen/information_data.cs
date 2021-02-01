@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Localization;
 using TaleWorlds.SaveSystem;
@@ -46,8 +47,7 @@ namespace Tired_party.Information_Screen
         {
             //排序nlogn,直接走一遍只需要n
             float test_hour = (float)(CampaignTime.Now.ToHours - 24 * 14);
-            bool flag = true;
-            while(flag)
+            while(!data2.IsEmpty())
             {
                 information_node temp = data2.Peek();
                 if(temp.time < test_hour)
@@ -56,7 +56,7 @@ namespace Tired_party.Information_Screen
                 }
                 else
                 {
-                    flag = false;
+                    break;
                 }
             }
             /*foreach(var item in  data.ToList())

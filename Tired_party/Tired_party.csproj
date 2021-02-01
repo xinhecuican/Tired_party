@@ -381,13 +381,16 @@
     <Compile Include="Model\Tired_party_speed_model.cs" />
     <Compile Include="mod_setting.cs" />
     <Compile Include="Party_tired.cs" />
-    <Compile Include="Patch\Informationmanager_patch.cs" />
     <Compile Include="Patch\InformationVM_patch.cs" />
     <Compile Include="Patch\mobileparty_patch.cs" />
     <Compile Include="Patch\notification_patch.cs" />
     <Compile Include="Save\MBsave_behavior.cs" />
     <Compile Include="Save\MCMsetting_data.cs" />
     <Compile Include="Save\tired_save_definer.cs" />
+    <Compile Include="sneak_attack\gamemenu_beahvior.cs" />
+    <Compile Include="sneak_attack\sneak_controller.cs" />
+    <Compile Include="sneak_attack\sneak_mission.cs" />
+    <Compile Include="sneak_attack\spawn_logic_patch.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tired_party_data.cs" />
