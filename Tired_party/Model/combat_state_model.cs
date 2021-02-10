@@ -34,58 +34,5 @@ namespace Tired_party.Model
                 agentDrivenProperties.SwingSpeedMultiplier *= penalty;
             }
         }
-
-        public override void AddExtraAmmo(Agent agent)
-        {
-            base.AddExtraAmmo(agent);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override float GetDifficultyModifier()
-        {
-            return base.GetDifficultyModifier();
-        }
-
-        public override float GetEffectiveMaxHealth(Agent agent)
-        {
-            return base.GetEffectiveMaxHealth(agent);
-        }
-
-        public override int GetEffectiveSkill(BasicCharacterObject agentCharacter, IAgentOriginBase agentOrigin, Formation agentFormation, SkillObject skill)
-        {
-            return base.GetEffectiveSkill(agentCharacter, agentOrigin, agentFormation, skill);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override float GetInteractionDistance(Agent agent)
-        {
-            return base.GetInteractionDistance(agent);
-        }
-        public override float GetMaxCameraZoom(Agent agent)
-        {
-            return base.GetMaxCameraZoom(agent);
-        }
-        public override string GetMissionDebugInfoForAgent(Agent agent)
-        {
-            return base.GetMissionDebugInfoForAgent(agent);
-        }
-
-        public override float GetWeaponInaccuracy(Agent agent, WeaponComponentData weapon, int weaponSkill)
-        {
-            return base.GetWeaponInaccuracy(agent, weapon, weaponSkill);
-        }
-
-        public override void InitializeAgentStats(Agent agent, Equipment spawnEquipment, AgentDrivenProperties agentDrivenProperties, AgentBuildData agentBuildData)
-        {
-            base.InitializeAgentStats(agent, spawnEquipment, agentDrivenProperties, agentBuildData);
-        }
     }
 }

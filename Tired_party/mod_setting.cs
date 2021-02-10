@@ -80,9 +80,14 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
         public bool is_ban_combat_effect { get; set; }
 
+        [SettingPropertyBool("{=yMd7rJIVr3}use sneak for all time", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
+        public bool use_sneak { get; set; }
+
         [SettingPropertyBool("{=nK2k7zUBPS}use debug", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
         public bool is_ban_debug { get; set; }
+
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]

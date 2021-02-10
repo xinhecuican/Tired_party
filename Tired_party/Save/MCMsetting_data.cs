@@ -44,6 +44,8 @@ namespace Tired_party.Save
         public bool is_ban_debug;
         [SaveableField(17)]
         public float combat_effect_rate;
+        [SaveableField(18)]
+        public bool use_sneak;
 
         public void save_data()
         {
@@ -64,6 +66,7 @@ namespace Tired_party.Save
             is_ban_combat_effect = GlobalSettings<mod_setting>.Instance.is_ban_combat_effect;
             is_ban_debug = GlobalSettings<mod_setting>.Instance.is_ban_debug;
             combat_effect_rate = GlobalSettings<mod_setting>.Instance.combat_effect_rate;
+            use_sneak = GlobalSettings<mod_setting>.Instance.use_sneak;
         }
 
         public void load_data()
@@ -85,6 +88,7 @@ namespace Tired_party.Save
             GlobalSettings<mod_setting>.Instance.is_ban_combat_effect = is_ban_combat_effect;
             GlobalSettings<mod_setting>.Instance.is_ban_debug = is_ban_debug;
             GlobalSettings<mod_setting>.Instance.combat_effect_rate = combat_effect_rate;
+            GlobalSettings<mod_setting>.Instance.use_sneak = use_sneak;
         }
     }
 }

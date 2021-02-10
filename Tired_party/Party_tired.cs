@@ -67,6 +67,11 @@ namespace Tired_party
 
         public List<information_data> Information { get => information; set => information = value; }
 
+		public static bool is_using()
+        {
+			return Party_tired.Current != null;
+        }
+
         public static void add_to_dict(MobileParty mobileParty, float now_tired = 1)
         {
             if(mobileParty.IsCaravan || mobileParty.IsVillager)

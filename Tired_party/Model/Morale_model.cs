@@ -27,9 +27,9 @@ namespace Tired_party.Model
             float base_ans = base.GetEffectivePartyMorale(mobileParty, explanation);
             if (Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) && !GlobalSettings<mod_setting>.Instance.is_ban)
             {
-                
+
                 ExplainedNumber explainedNumber = new ExplainedNumber(base_ans, explanation, null);
-                if(GlobalSettings<mod_setting>.Instance.is_ban_army && mobileParty.Army != null)
+                if (GlobalSettings<mod_setting>.Instance.is_ban_army && mobileParty.Army != null)
                 {
                     return base_ans;
                 }

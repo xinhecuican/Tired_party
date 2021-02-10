@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
@@ -285,8 +286,15 @@ namespace Tired_party
 
         protected override void OnApplicationTick(float dt)
         {
-            if(!GlobalSettings<mod_setting>.Instance.is_ban)
-                this.On_key_press();
+            
+            if(Input.IsKeyDown(InputKey.M))
+            {
+                foreach(Formation formation in Mission.Current.PlayerEnemyTeam.Formations)
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(formation.PrimaryClass.ToString() + formation.CountOfUnits.ToString()));
+                }
+            }
+             this.On_key_press();
         }
         private void On_key_press()
         {

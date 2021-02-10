@@ -18,7 +18,7 @@ namespace Tired_party.Patch
         [HarmonyPostfix]
         public static void ai_tick_postfix(MobileParty __instance)
         {
-            if (!Party_tired.Current.Party_tired_rate.ContainsKey(__instance) || __instance.IsMainParty)
+            if ((!Party_tired.Current.Party_tired_rate.ContainsKey(__instance) || __instance.IsMainParty))
             {
                 return;
             }

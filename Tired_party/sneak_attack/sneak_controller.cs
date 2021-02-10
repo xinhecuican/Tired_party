@@ -27,6 +27,10 @@ namespace Tired_party.sneak_attack
         private bool _isMissionInitialized = false;
         private bool _troopsInitialized;
         private BattleSideEnum player_side;
+        public static bool is_drop_items;
+        public static List<Agent> agents = new List<Agent>();
+        public static int drop_num;
+
 
         public sneak_controller(BattleSideEnum playerSide)
         {
@@ -46,8 +50,8 @@ namespace Tired_party.sneak_attack
             int num2 = MBMath.Floor((float)MapEvent.PlayerMapEvent.GetNumberOfInvolvedMen(BattleSideEnum.Attacker));
             int defenderInitialSpawn = num;
             int attackerInitialSpawn = num2;
-            this._Spawn_Logic.SetSpawnHorses(BattleSideEnum.Defender, !MapEvent.PlayerMapEvent.IsSiegeAssault && BattleSideEnum.Defender == player_side);
-            this._Spawn_Logic.SetSpawnHorses(BattleSideEnum.Attacker, !MapEvent.PlayerMapEvent.IsSiegeAssault && BattleSideEnum.Defender == player_side);
+            this._Spawn_Logic.SetSpawnHorses(BattleSideEnum.Defender, !MapEvent.PlayerMapEvent.IsSiegeAssault);
+            this._Spawn_Logic.SetSpawnHorses(BattleSideEnum.Attacker, !MapEvent.PlayerMapEvent.IsSiegeAssault);
             this._Spawn_Logic.InitWithSinglePhase(num, num2, defenderInitialSpawn, attackerInitialSpawn, true, true, 1f);
         }
 
@@ -57,7 +61,7 @@ namespace Tired_party.sneak_attack
 
         public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
         {
-            if(flag == Agent.AIStateFlag.Alarmed || flag == Agent.AIStateFlag.Cautious)
+            /*if(flag == Agent.AIStateFlag.Alarmed || flag == Agent.AIStateFlag.Cautious)
             {
                 if(agent.IsUsingGameObject)
                 {
@@ -65,17 +69,41 @@ namespace Tired_party.sneak_attack
                 }
                 else
                 {
-                    agent.DisableScriptedMovement();
-                    agent.AIMoveToGameObjectDisable();
+                    //agent.DisableScriptedMovement();
+                    //agent.AIMoveToGameObjectDisable();
                 }
             }
             else if (flag == Agent.AIStateFlag.None)
             {
                 agent.TryToSheathWeaponInHand(Agent.HandIndex.MainHand,
                     Agent.WeaponWieldActionType.WithAnimation);
+            }*/
+            if((flag == Agent.AIStateFlag.Alarmed || flag == Agent.AIStateFlag.Cautious) && agents != null)
+            {
+                action_component component = agent.GetComponent<action_component>();
+                if (component != null)
+                {    
+                    if(flag == Agent.AIStateFlag.Alarmed)
+                    {
+                        component.last_action_begin = true;
+                    }
+                }
+                
             }
             if(flag == Agent.AIStateFlag.Alarmed)
             {
+                patrol_component component1 = agent.GetComponent<patrol_component>();
+                if (component1 != null)
+                {
+                    agent.DisableScriptedMovement();
+                }
+                else
+                {
+                    if(MBRandom.RandomFloat < 0.1)
+                    {
+                        DropWeapons(agent);
+                    }
+                }
                 agent.SetWantsToYell();
             }
             
@@ -90,20 +118,7 @@ namespace Tired_party.sneak_attack
                     InitializeMission();
                     _isMissionInitialized = true;
                     return;
-                }
-                if (!_troopsInitialized)
-                {
-                    _troopsInitialized = true;
-                    /*foreach (Agent agent in base.Mission.Agents)
-                    {
-                        this._battleAgentLogic.OnAgentBuild(agent, null);
-                    }
-                    MissionDefaultCaptainAssignmentLogic missionBehaviour = base.Mission.GetMissionBehaviour<MissionDefaultCaptainAssignmentLogic>();
-                    if (missionBehaviour != null)
-                    {
-                        missionBehaviour.AssignCaptainsForMission();
-                    }*/
-                    
+                
                 }
                 UsedObjectTick(dt);
             }
@@ -116,17 +131,7 @@ namespace Tired_party.sneak_attack
 
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
         {
-            using (IEnumerator<Agent> enumerator = base.Mission.Agents.GetEnumerator())
-            {
-                while (enumerator.MoveNext())
-                {
-                    Agent agent = enumerator.Current;
-                    if (agent != affectedAgent && agent != affectorAgent && agent.IsActive() && agent.GetLookAgent() == affectedAgent)
-                    {
-                        agent.SetLookAgent(null);
-                    }
-                }
-            }
+            
         }
 
         protected override void OnEndMission()
@@ -134,18 +139,11 @@ namespace Tired_party.sneak_attack
             Party_tired.is_sneak_mission = false;
         }
 
-        public override void OnPreMissionTick(float dt)
-        {
-            
-        }
-
-        
-
         private void InitializeMission()
         {
             try
             {
-                base.Mission.SetMissionMode(MissionMode.Stealth, true);
+                base.Mission.SetMissionMode(MissionMode.Battle, true);
                 base.Mission.DoesMissionRequireCivilianEquipment = false;
             }
             catch(Exception e)
@@ -160,17 +158,18 @@ namespace Tired_party.sneak_attack
             
         }
 
-        private void DropAllWeapons(Agent agent)
+        public static void DropWeapons(Agent agent)
         {
             for (EquipmentIndex equipmentIndex = EquipmentIndex.WeaponItemBeginSlot; equipmentIndex < EquipmentIndex.NumAllWeaponSlots; equipmentIndex++)
             {
                 if (!agent.Equipment[equipmentIndex].IsEmpty)
                 {
-                    agent.DropItem(equipmentIndex, WeaponClass.Undefined);
+                    
+                    WeaponClass weapon = agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass;
+                    agent.DropItem(equipmentIndex, weapon);
+                    break;
                 }
             }
         }
-
-        
     }
 }

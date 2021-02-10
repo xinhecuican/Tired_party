@@ -1,4 +1,5 @@
 ﻿using Helpers;
+using MCM.Abstractions.Settings.Base.Global;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,10 @@ namespace Tired_party.sneak_attack
 
         private bool sneak_condition(MenuCallbackArgs args)
         {
-			return true;
+			if(GlobalSettings<mod_setting>.Instance.use_sneak)
+            {
+				return true;
+            }
 			if(CampaignTime.Now.IsDayTime)
             {
 				return false;
@@ -59,7 +63,7 @@ namespace Tired_party.sneak_attack
 				&& PartyBase.MainParty.Side == TaleWorlds.Core.BattleSideEnum.Attacker)
             {
 				MobileParty party = MapEvent.PlayerMapEvent.GetLeaderParty(PartyBase.MainParty.OpponentSide).MobileParty;
-				if (Party_tired.Current.Party_tired_rate.ContainsKey(party) && Party_tired.Current.Party_tired_rate[party].reset_time > 0)
+				if (Party_tired.Current.Party_tired_rate.ContainsKey(party) && Party_tired.Current.Party_tired_rate[party].reset_time > 0 && !Party_tired.Current.Party_tired_rate[party].is_fleeing)
                 {
 					return true;
                 }

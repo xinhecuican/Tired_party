@@ -21,25 +21,25 @@ namespace Tired_party.Model
             ExplainedNumber explainedNumber = new ExplainedNumber((float)num, null);
             float strikeradvantage = 1f;
             float strikedadvantage = 1f;
-            if(strikerParty.IsMobile)
+            if (strikerParty.IsMobile)
             {
                 strikeradvantage = Party_tired.Current.Party_tired_rate.ContainsKey(strikerParty.MobileParty)
                     ? Party_tired.Current.Party_tired_rate[strikerParty.MobileParty].Now : 1f;
             }
-            if(strikedParty.IsMobile)
+            if (strikedParty.IsMobile)
             {
                 strikedadvantage = Party_tired.Current.Party_tired_rate.ContainsKey(strikedParty.MobileParty)
                     ? Party_tired.Current.Party_tired_rate[strikedParty.MobileParty].Now : 1f;
             }
-            if(Math.Abs(strikerAdvantage - strikedadvantage) < 0.2f)
+            if (Math.Abs(strikerAdvantage - strikedadvantage) < 0.2f)
             {
                 return (int)explainedNumber.ResultNumber;
             }
-            else if(strikeradvantage - strikedadvantage > 0.2f)
+            else if (strikeradvantage - strikedadvantage > 0.2f)
             {
                 explainedNumber.AddFactor((float)Math.Pow((strikerAdvantage - strikedadvantage - 0.2) / 1, 4), new TextObject("tired influence"));
             }
-            
+
             return (int)explainedNumber.ResultNumber;
         }
 
@@ -58,6 +58,6 @@ namespace Tired_party.Model
             return base.GetSettlementAdvantage(settlement);
         }
 
-        
+
     }
 }
