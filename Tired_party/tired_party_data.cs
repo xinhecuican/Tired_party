@@ -45,6 +45,8 @@ namespace Tired_party
         public bool is_busy;
         [SaveableField(16)]
         public bool is_fleeing;
+        [SaveableField(17)]
+        public int discover_state = 0; //0 - 默认， 1 - 发现， 2-未发现
 
         public int Limit { get { return _limit; } set{ _limit = value; } }
         public int Number { get { return _number; } set { if (value < 0) { _number = 0; } else { _number = value; } } }

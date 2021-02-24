@@ -38,6 +38,8 @@ namespace Tired_party.Save
                 party.information.Add(Party_tired.Current.information[i]);
             }
             mcm_data.save_data();
+            SubModule.config.battle_radius = GlobalSettings<mod_setting>.Instance.battle_radius;
+            Config.write_to_config();
             /*mcm_data.is_ban = GlobalSettings<mod_setting>.Instance.is_ban;
             mcm_data.is_ban_army = GlobalSettings<mod_setting>.Instance.is_ban_army;
             mcm_data.is_ban_capture_information = GlobalSettings<mod_setting>.Instance.is_ban_capture_information;

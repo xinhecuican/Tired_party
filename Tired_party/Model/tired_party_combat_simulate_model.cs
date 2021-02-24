@@ -18,7 +18,7 @@ namespace Tired_party.Model
         public override int SimulateHit(CharacterObject strikerTroop, CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty, float strikerAdvantage, MapEvent battle)
         {
             float num = base.SimulateHit(strikerTroop, strikedTroop, strikerParty, strikedParty, strikerAdvantage, battle);
-            ExplainedNumber explainedNumber = new ExplainedNumber((float)num, null);
+            ExplainedNumber explainedNumber = new ExplainedNumber((float)num, false);
             float strikeradvantage = 1f;
             float strikedadvantage = 1f;
             if (strikerParty.IsMobile)
@@ -41,21 +41,6 @@ namespace Tired_party.Model
             }
 
             return (int)explainedNumber.ResultNumber;
-        }
-
-        public override float GetMaximumSiegeEquipmentProgress(Settlement settlement)
-        {
-            return base.GetMaximumSiegeEquipmentProgress(settlement);
-        }
-
-        public override int GetNumberOfEquipmentsBuilt(Settlement settlement)
-        {
-            return base.GetNumberOfEquipmentsBuilt(settlement);
-        }
-
-        public override float GetSettlementAdvantage(Settlement settlement)
-        {
-            return base.GetSettlementAdvantage(settlement);
         }
 
 

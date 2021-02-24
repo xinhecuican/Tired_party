@@ -85,7 +85,7 @@ namespace Tired_party.sneak_attack
                 {    
                     if(flag == Agent.AIStateFlag.Alarmed)
                     {
-                        component.last_action_begin = true;
+                        component.first_action_begin = true;
                     }
                 }
                 

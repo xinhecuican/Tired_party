@@ -229,7 +229,7 @@ namespace Tired_party.Behaviors
                     Party_tired.Current.Party_tired_rate[mobileParty].need_recovery = false;
                 }
                 float now_tired = Party_tired.Current.Party_tired_rate[mobileParty].Now;
-                float ans_tired = Party_tired.begin_to_decrease - now_tired > 0 ? (float)Math.Sqrt(Party_tired.begin_to_decrease - now_tired)  * 5 / 3f + 0.49f : (float)Math.Pow(1 - now_tired, 2);
+                float ans_tired = Party_tired.begin_to_decrease - now_tired > 0 ? (float)Math.Sqrt(Party_tired.begin_to_decrease - now_tired)  * 5 / 3f + 0.59f : (float)Math.Pow(1 - now_tired, 2) + 0.1f;
                 bool flag_follow_behavior = (mobileParty.DefaultBehavior == AiBehavior.GoAroundParty && mobileParty.TargetParty != null) || mobileParty.DefaultBehavior == AiBehavior.EscortParty;
                 bool flag_engage_behavior = mobileParty.ShortTermBehavior == AiBehavior.EngageParty;
                 bool flag_go_to_someplace_behavior = mobileParty.DefaultBehavior == AiBehavior.GoToPoint || mobileParty.DefaultBehavior == AiBehavior.GoToSettlement || mobileParty.DefaultBehavior == AiBehavior.PatrolAroundPoint;

@@ -22,20 +22,25 @@ namespace Tired_party.Model
             return base.GetDailyNoWageMoralePenalty(party);
         }
 
-        public override float GetEffectivePartyMorale(MobileParty mobileParty, StatExplainer explanation = null)
+        public override ExplainedNumber GetEffectivePartyMorale(MobileParty mobileParty, bool includeDescription = false)
         {
-            float base_ans = base.GetEffectivePartyMorale(mobileParty, explanation);
+            ExplainedNumber base_ans = base.GetEffectivePartyMorale(mobileParty, includeDescription);
             if (Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) && !GlobalSettings<mod_setting>.Instance.is_ban)
             {
 
-                ExplainedNumber explainedNumber = new ExplainedNumber(base_ans, explanation, null);
+                
                 if (GlobalSettings<mod_setting>.Instance.is_ban_army && mobileParty.Army != null)
                 {
                     return base_ans;
                 }
                 float morale_num = Party_tired.Current.Party_tired_rate.ContainsKey(mobileParty) ? Party_tired.Current.Party_tired_rate[mobileParty].Morale : 0f;
-                explainedNumber.Add(-(morale_num * GlobalSettings<mod_setting>.Instance.morale_reduce), new TextObject("tired party"));
-                return explainedNumber.ResultNumber;
+                TextObject text = null;
+                if(includeDescription)
+                {
+                    text = new TextObject("tired party");
+                }
+                base_ans.Add(-(morale_num * GlobalSettings<mod_setting>.Instance.morale_reduce), text) ;
+                return base_ans;
             }
             return base_ans;
         }

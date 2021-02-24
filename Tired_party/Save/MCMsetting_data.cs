@@ -46,6 +46,12 @@ namespace Tired_party.Save
         public float combat_effect_rate;
         [SaveableField(18)]
         public bool use_sneak;
+        [SaveableField(19)]
+        public bool ban_reinforcement;
+        [SaveableField(20)]
+        public float time_lapse_ratio;
+        [SaveableField(21)]
+        public float battle_radius;
 
         public void save_data()
         {
@@ -67,6 +73,9 @@ namespace Tired_party.Save
             is_ban_debug = GlobalSettings<mod_setting>.Instance.is_ban_debug;
             combat_effect_rate = GlobalSettings<mod_setting>.Instance.combat_effect_rate;
             use_sneak = GlobalSettings<mod_setting>.Instance.use_sneak;
+            ban_reinforcement = GlobalSettings<mod_setting>.Instance.ban_reinforcement;
+            time_lapse_ratio = GlobalSettings<mod_setting>.Instance.time_lapse_ratio;
+            battle_radius = GlobalSettings<mod_setting>.Instance.battle_radius;
         }
 
         public void load_data()
@@ -89,6 +98,9 @@ namespace Tired_party.Save
             GlobalSettings<mod_setting>.Instance.is_ban_debug = is_ban_debug;
             GlobalSettings<mod_setting>.Instance.combat_effect_rate = combat_effect_rate;
             GlobalSettings<mod_setting>.Instance.use_sneak = use_sneak;
+            GlobalSettings<mod_setting>.Instance.ban_reinforcement = ban_reinforcement;
+            GlobalSettings<mod_setting>.Instance.time_lapse_ratio = time_lapse_ratio;
+            GlobalSettings<mod_setting>.Instance.battle_radius = battle_radius;
         }
     }
 }

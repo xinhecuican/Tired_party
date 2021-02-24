@@ -31,6 +31,7 @@ namespace Tired_party
         public static float recovery_in_night_time = 0.33f;
         public static float begin_to_decrease = 0.3f;
 		public static bool is_sneak_mission = false;
+		public static bool is_wish_mission = false;
         public static MobileParty test_party = null;
         public Dictionary<MobileParty, tired_party_data> Party_tired_rate
         {

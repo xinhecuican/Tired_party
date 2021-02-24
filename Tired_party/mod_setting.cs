@@ -88,6 +88,10 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
         public bool is_ban_debug { get; set; }
 
+        [SettingPropertyBool("{=dyOrOAqAb4}ban reinforcement", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
+        public bool ban_reinforcement { get; set; }
+
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
@@ -109,7 +113,7 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float limit_speed { get; set; } = 0.75f;
 
-        [SettingPropertyFloatingInteger("{=tired_party_limit_presist}Minimum persistence time", 2f, 5f, "0.00", Order = 6, RequireRestart = false, HintText = "{=tired_hint_text_limit_persist}The minimum time you can hold on to every time you don't sleep, the default is 3 days")]
+        [SettingPropertyFloatingInteger("{=tired_party_limit_presist}Minimum persistence time", 1f, 5f, "0.00", Order = 6, RequireRestart = false, HintText = "{=tired_hint_text_limit_persist}The minimum time you can hold on to every time you don't sleep, the default is 3 days")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float persist_time { get; set; } = 3f;
 
@@ -120,6 +124,14 @@ namespace Tired_party
         [SettingPropertyFloatingInteger("{=WxqpKxSZ63}combat effect rate", 0.5f, 2f, "0.00", Order = 8, RequireRestart = false, HintText = "{=tX3M9pnZ4L}affect combat speed、accuracy etc. The smaller the value, the faster the drop")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float combat_effect_rate { get; set; } = 1f;
+
+        [SettingPropertyFloatingInteger("{=OAPp93fQ6a}Time lapse ratio", 0f, 240f, "0.00", Order = 9, RequireRestart = false, HintText = "{=UDqDzIyAuH}For example, mission mode passes 60s, main map passes 1 hour")]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
+        public float  time_lapse_ratio{ get; set; } = 60f;
+
+        [SettingPropertyFloatingInteger("{=16kbwS1kSe}battle radius", 3f, 10f, "0.00", Order = 9, RequireRestart = false, HintText = "{=ByCacSNyJq}party search radius for joining the battle, origin is 4")]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
+        public float battle_radius { get; set; } = 6f;
 
         [SettingPropertyBool("{=jDamJPB6mC}don't show information left", RequireRestart = false, IsToggle = false)]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=JacQTvCmeo}information setting")]

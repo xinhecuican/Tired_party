@@ -13,16 +13,9 @@ namespace Tired_party.Model
 {
     class Tired_party_speed_model : DefaultPartySpeedCalculatingModel
     {
-        public override float CalculatePureSpeed(MobileParty mobileParty, StatExplainer explanation,
-            int additionalTroopOnFootCount = 0, int additionalTroopOnHorseCount = 0)
+        public override ExplainedNumber CalculateFinalSpeed(MobileParty mobileParty, ExplainedNumber finalSpeed)
         {
-            return base.CalculatePureSpeed(mobileParty, explanation, additionalTroopOnFootCount, additionalTroopOnHorseCount);
-
-        }
-
-        public override float CalculateFinalSpeed(MobileParty mobileParty, float baseSpeed, StatExplainer explanation)
-        {
-            float base_speed = base.CalculateFinalSpeed(mobileParty, baseSpeed, explanation);
+            ExplainedNumber base_speed = base.CalculateFinalSpeed(mobileParty, finalSpeed);
             if (Party_tired.Current == null)
             {
                 return base_speed;
@@ -36,7 +29,8 @@ namespace Tired_party.Model
             Party_tired.Current.Party_tired_rate.TryGetValue(mobileParty, out tired);
             if (tired != null && !GlobalSettings<mod_setting>.Instance.is_ban)
             {
-                return base_speed * Get_ratio(tired);
+                base_speed.AddFactor(Get_ratio(tired)-1, new TaleWorlds.Localization.TextObject("tired party"));
+                return base_speed;
             }
             return base_speed;
         }

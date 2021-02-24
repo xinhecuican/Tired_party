@@ -74,17 +74,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCM.NexusMods.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.dll</HintPath>
+    <Reference Include="MCMv4">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.dll</HintPath>
     </Reference>
-    <Reference Include="MCMv4.Implementation.ModLib, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen.ModLib\bin\Win64_Shipping_Client\MCMv4.Implementation.ModLib.dll</HintPath>
-    </Reference>
-    <Reference Include="MCMv4.UI, Version=4.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\Mount &amp; Blade mods\Mod Configuration Menu-612-v4-1-2-1604346878\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.UI.dll</HintPath>
+    <Reference Include="MCMv4.UI">
+      <HintPath>G:\steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv4.UI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.HashCode">
       <HintPath>G:\Mount &amp; Blade mods\ButterLib-2018-v1-0-19-1609091545\Modules\Bannerlord.ButterLib\bin\Win64_Shipping_Client\Microsoft.Bcl.HashCode.dll</HintPath>
@@ -351,6 +345,7 @@
     <Compile Include="Behaviors\Hourly_change_behaviour.cs" />
     <Compile Include="Behaviors\Recalculate_ratio_behavior.cs" />
     <Compile Include="Calculate_party_tired.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Helper\debug_helper.cs" />
     <Compile Include="Helper\log_helper.cs" />
     <Compile Include="Helper\message_helper.cs" />
@@ -361,6 +356,14 @@
     <Compile Include="Information_Screen\information_itemVM.cs" />
     <Compile Include="Information_Screen\information_node.cs" />
     <Compile Include="Information_Screen\Tired_information_screen.cs" />
+    <Compile Include="Mission_time\agent_spawn_controller.cs" />
+    <Compile Include="Mission_time\arrive_time_data.cs" />
+    <Compile Include="Mission_time\check_radius_patch.cs" />
+    <Compile Include="Mission_time\end_behaivor.cs" />
+    <Compile Include="Mission_time\MissionSide_patch.cs" />
+    <Compile Include="Mission_time\missiontime_data.cs" />
+    <Compile Include="Mission_time\time_pass_behaviour.cs" />
+    <Compile Include="Mission_time\using_missiontime_missions.cs" />
     <Compile Include="Model\combat_state_model.cs" />
     <Compile Include="Model\Morale_model.cs" />
     <Compile Include="Model\tired_party_combat_simulate_model.cs" />

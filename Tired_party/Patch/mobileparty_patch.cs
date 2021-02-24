@@ -34,22 +34,35 @@ namespace Tired_party.Patch
                     switch (__instance.ShortTermBehavior)
                     {
                         case AiBehavior.FleeToPoint:
+                            if(Party_tired.Current.Party_tired_rate[__instance].discover_state == 1)
+                            {
+                                break;
+                            }
+                            else if(Party_tired.Current.Party_tired_rate[__instance].discover_state == 2)
+                            {
+                                __instance.SetMoveModeHold();
+                                break;
+                            }
                             if (is_alert(__instance))
                             {
-                                
+                                Party_tired.Current.Party_tired_rate[__instance].discover_state = 1;
                                 Party_tired.ToggleTent(__instance.Party, false);
                             }
                             else
                             {
+                                Party_tired.Current.Party_tired_rate[__instance].discover_state = 2;
                                 __instance.SetMoveModeHold();
                             }
                             break;
                         case AiBehavior.EngageParty:
+                            Party_tired.Current.Party_tired_rate[__instance].discover_state = 0;
                             Party_tired.ToggleTent(__instance.Party, false);
                             break;
                         case AiBehavior.Hold:
+                            Party_tired.Current.Party_tired_rate[__instance].discover_state = 0;
                             break;
                         default:
+                            Party_tired.Current.Party_tired_rate[__instance].discover_state = 0;
                             __instance.SetMoveModeHold();
                             break;
                     }

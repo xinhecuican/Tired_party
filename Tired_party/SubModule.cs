@@ -2,6 +2,7 @@ using HarmonyLib;
 using MCM.Abstractions.Settings.Base.Global;
 using System;
 using System.Collections.Generic;
+using System.Management.Instrumentation;
 using System.Reflection;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -14,6 +15,7 @@ using TaleWorlds.MountAndBlade;
 using Tired_party.Behaviors;
 using Tired_party.Helper;
 using Tired_party.Information_Screen;
+using Tired_party.Mission_time;
 using Tired_party.Model;
 using Tired_party.Save;
 using Tired_party.sneak_attack;
@@ -25,6 +27,8 @@ namespace Tired_party
         public static TextObject menu_close = new TextObject("{=BnePFn4jE6}Exit", null);
         public static TextObject menu_cancel = new TextObject("{=ybgznSENV2}Done", null);
         public static TextObject title = new TextObject("{=2l0MyiIYvS}Information Screen", null);
+        public static float battle_radius;
+        public static Config config;
 
         /// <summary>
         /// 游戏处于加载界面时最先被调用的函数，你应该在这个函数中完成初始化的主要部分
@@ -33,6 +37,16 @@ namespace Tired_party
         {
             try
             {
+                string file_path = System.IO.Path.Combine(new string[]
+            {
+                BasePath.Name,
+                "Modules",
+                "Tired_party",
+                "ModuleData",
+                "Config.xml"
+            });
+                config = new Config(file_path);
+                battle_radius = config.battle_radius;
                 base.OnSubModuleLoad();
                 MethodInfo method = typeof(MissionAgentSpawnLogic).Assembly.
                     GetType("TaleWorlds.MountAndBlade.MissionAgentSpawnLogic+MissionSide").
@@ -115,6 +129,7 @@ namespace Tired_party
             starter.AddBehavior(new AiSleepBehavior());
             starter.AddBehavior(new MBsave_behavior());
             starter.AddBehavior(new gamemenu_beahvior());
+            starter.AddBehavior(new time_pass_behaviour());
         }
 
         private void replace_models(CampaignGameStarter starter)
@@ -286,14 +301,6 @@ namespace Tired_party
 
         protected override void OnApplicationTick(float dt)
         {
-            
-            if(Input.IsKeyDown(InputKey.M))
-            {
-                foreach(Formation formation in Mission.Current.PlayerEnemyTeam.Formations)
-                {
-                    InformationManager.DisplayMessage(new InformationMessage(formation.PrimaryClass.ToString() + formation.CountOfUnits.ToString()));
-                }
-            }
              this.On_key_press();
         }
         private void On_key_press()

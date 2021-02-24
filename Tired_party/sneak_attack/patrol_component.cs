@@ -48,7 +48,7 @@ namespace Tired_party.sneak_attack
                 }
                 return;
             }
-            if (begin_time.Check() && agent.IsActive())
+            if (begin_time.Check(true) && agent.IsActive())
             {
                 AgentAIStateFlagComponent ai_flag_component = agent.GetComponent<AgentAIStateFlagComponent>();
                 Vec2 agent_position = agent.Position.AsVec2;

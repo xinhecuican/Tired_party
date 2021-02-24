@@ -63,7 +63,7 @@ namespace Tired_party.sneak_attack
 				&& PartyBase.MainParty.Side == TaleWorlds.Core.BattleSideEnum.Attacker)
             {
 				MobileParty party = MapEvent.PlayerMapEvent.GetLeaderParty(PartyBase.MainParty.OpponentSide).MobileParty;
-				if (Party_tired.Current.Party_tired_rate.ContainsKey(party) && Party_tired.Current.Party_tired_rate[party].reset_time > 0 && !Party_tired.Current.Party_tired_rate[party].is_fleeing)
+				if (Party_tired.Current.Party_tired_rate.ContainsKey(party) && Party_tired.Current.Party_tired_rate[party].reset_time > 0)
                 {
 					return true;
                 }
