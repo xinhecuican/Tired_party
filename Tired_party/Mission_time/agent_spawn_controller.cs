@@ -9,10 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using Tired_party.Helper;
+using Tired_party.sneak_attack;
 
 namespace Tired_party.Mission_time
 {
@@ -25,7 +27,7 @@ namespace Tired_party.Mission_time
         public int attacker_initial_num;
         public List<arrive_time_data> ready_to_place;
         private TextObject text1 = new TextObject("{=m3sLthymyB}is going to arrive in half an hour", null);
-        private TextObject text2 = new TextObject("{=1yoGH2Ud8A} seconds)", null);
+        private TextObject text2 = new TextObject("{=1yoGH2Ud8A}from )", null);
         public override void OnBehaviourInitialize()
         {
             missionAgentSpawnLogic = base.Mission.GetMissionBehaviour<MissionAgentSpawnLogic>();
@@ -64,9 +66,16 @@ namespace Tired_party.Mission_time
                             missiontime_data.current.time_and_direction[i][k].arrive_time -= 0.5f;
                             if(missiontime_data.current.time_and_direction[i][k].arrive_time <= 0.5f && missiontime_data.current.time_and_direction[i][k].arrive_time > 0)
                             {
-
-                                message_helper.TechnicalMessage(missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
-                                     text1.ToString() + "(" + (GlobalSettings<mod_setting>.Instance.time_lapse_ratio / 2).ToString() + text2 + ")");
+                                if (i != (int)MapEvent.PlayerMapEvent.PlayerSide)
+                                {
+                                    message_helper.TechnicalMessage(missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
+                                         text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")");
+                                }
+                                else
+                                {
+                                    message_helper.FriendlyMessage(missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
+                                         text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")");
+                                }
                             }
                             if (missiontime_data.current.time_and_direction[i][k].arrive_time <= 0)
                             {
@@ -122,6 +131,9 @@ namespace Tired_party.Mission_time
                                         }
                                     }
                                     InformationManager.AddQuickInformation(i == (int)mapEvent.PlayerSide ? GameTexts.FindText("str_new_reinforcements_have_arrived_for_ally_side", null) : GameTexts.FindText("str_new_reinforcements_have_arrived_for_enemy_side", null), 0, null, "");
+                                    MatrixFrame cameraFrame = Mission.Current.GetCameraFrame();
+                                    Vec3 position = cameraFrame.origin + cameraFrame.rotation.u;
+                                    MBSoundEvent.PlaySound(i == (int)mapEvent.PlayerSide ? SoundEvent.GetEventIdFromString("event:/alerts/report/reinforcements_ally") : SoundEvent.GetEventIdFromString("event:/alerts/report/reinforcements_enemy"), position);
                                 }
                                 ready_to_place.Add(missiontime_data.current.time_and_direction[i][k]);
                             }
@@ -134,6 +146,30 @@ namespace Tired_party.Mission_time
                 MethodInfo methodInfo = MethodBase.GetCurrentMethod() as MethodInfo;
                 debug_helper.HandleException(e, methodInfo, "submodule load error");
             }
+        }
+
+        private string get_angle_text(arrive_time_data data)
+        {
+            Vec2 main_party_direction = MapEvent.PlayerMapEvent.Position - Campaign.Current.MainParty.Position2D;
+            float angle = main_party_direction.AngleBetween(data.enter_direction);
+            TextObject text;
+            if(angle >= Math.PI/2)
+            {
+                text = new TextObject("{=Feh3l6YBDL}Northeastern");
+            }
+            else if(angle >= 0)
+            {
+                text = new TextObject("{=C2wPNpo9Oz}Southeastern");
+            }
+            else if(angle >= - Math.PI / 2)
+            {
+                text = new TextObject("{=UdjhlmfgnH}Southwestern");
+            }
+            else
+            {
+                text = new TextObject("{=Umw5lAzt9c}Northwestern");
+            }
+            return text.ToString();
         }
     }
 }

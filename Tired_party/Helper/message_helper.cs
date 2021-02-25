@@ -40,5 +40,10 @@ namespace Tired_party.Helper
 		{
 			InformationManager.DisplayMessage(new InformationMessage(textObject.ToString(), Colors.Red));
 		}
+
+		public static void FriendlyMessage(string message)
+        {
+			InformationManager.DisplayMessage(new InformationMessage(message, Colors.Green));
+        }
 	}
 }

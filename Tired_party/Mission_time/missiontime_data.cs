@@ -49,17 +49,16 @@ namespace Tired_party.Mission_time
                 for (int i = 0; i < 2; i++)
                 {
                     MapEventSide side = MapEvent.PlayerMapEvent.GetMapEventSide((TaleWorlds.Core.BattleSideEnum)i);
-                    Vec2 position = Campaign.Current.MainParty.Position2D;
+                    Vec2 position = MapEvent.PlayerMapEvent.Position;
                     foreach (MapEventParty party in side.PartyRecs)
                     {
                         float distance;
                         float time = 0;
                         Campaign.Current.Models.MapDistanceModel.GetDistance(party.Party.MobileParty, Campaign.Current.MainParty.Position2D, float.MaxValue, out distance);
                         time = 2 * distance / party.Party.MobileParty.SpeedExplanation.ResultNumber;
-                        InformationManager.DisplayMessage(new InformationMessage(time.ToString()));
-                        if (time < 0.5f)
+                        if (time < 0.5f || (party.Party.IsMobile ? party.Party.MobileParty.IsMainParty : false))
                         {
-                            party.Update();
+                            /*party.Update();
                             int count = 0;
                             using (IEnumerator<FlattenedTroopRosterElement> enumerator = party.Troops.GetEnumerator())
                             {
@@ -71,16 +70,23 @@ namespace Tired_party.Mission_time
                                         count++;
                                     }
                                 }
-                            }
-                            initial_num[i] += count;
+                            }*/
+                            initial_num[i] += party.Party.NumberOfHealthyMembers;
                             parties[i].Add(party);
                             initial_troop_num[i]++;
                         }
                         else
                         {
-                            Vec2 direction = party.Party.Position2D - position;
+                            Vec2 direction = position - party.Party.Position2D;
                             time_and_direction[i].Add(new arrive_time_data(direction, time, party));
                         }
+                    }
+                    if(initial_troop_num[i] == 0)
+                    {
+                        initial_num[i] += time_and_direction[i][0].number;
+                        initial_troop_num[i]++;
+                        parties[i].Add(time_and_direction[i][0].party);
+                        time_and_direction[i].RemoveAt(0);
                     }
                     time_and_direction[i].Sort((x, y) => x.arrive_time.CompareTo(y.arrive_time));
                     foreach (arrive_time_data data in time_and_direction[i])

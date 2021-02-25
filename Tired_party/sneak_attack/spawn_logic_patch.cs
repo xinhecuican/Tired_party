@@ -3,6 +3,8 @@ using SandBox;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -109,8 +111,8 @@ namespace Tired_party.sneak_attack
 
                                         x_vector = new Vec2(-formation.Direction.y, formation.Direction.x);
                                         y_vector = formation.Direction;
-                                        x_vector.Normalize();
-                                        y_vector.Normalize();
+                                        x_vector.Normalized();
+                                        y_vector.Normalized();
                                         WorldFrame formationSpawnFrame = Mission.Current.GetFormationSpawnFrame(formation.Team.Side, formation.FormationIndex,
                                             isReinforcement, -1, 0f, spawn_with_horses);
                                         WorldPosition origin = formationSpawnFrame.Origin;
@@ -269,7 +271,7 @@ namespace Tired_party.sneak_attack
             }
             else if (Party_tired.is_wish_mission)
             {
-                Vec2 main_party_direction = Campaign.Current.MainParty.Position2D - (Vec2)AccessTools.Field(typeof(MobileParty), "_lastTrackPosition").GetValue(Campaign.Current.MainParty);
+                Vec2 main_party_direction = MapEvent.PlayerMapEvent.Position - Campaign.Current.MainParty.Position2D;
                 try
                 {
 
@@ -316,6 +318,7 @@ namespace Tired_party.sneak_attack
                                 bool is_playerside = (bool)AccessTools.Property(t, "IsPlayerSide").GetValue(__instance);
                                 Formation formation = Mission.GetAgentTeam(troopOrigin, is_playerside).GetFormation(formationClass);
                                 bool spawn_with_horses = (bool)AccessTools.Field(t, "_spawnWithHorses").GetValue(__instance);
+                                spawn_with_horses = true;
                                 bool isMounted = spawn_with_horses &&
                                     (formationClass == FormationClass.Cavalry || formationClass == FormationClass.LightCavalry || formationClass == FormationClass.HeavyCavalry || formationClass == FormationClass.HorseArcher);
                                 bool is_initial_spawn_over = Mission.Current.GetMissionBehaviour<MissionAgentSpawnLogic>().IsInitialSpawnOver;
@@ -324,15 +327,14 @@ namespace Tired_party.sneak_attack
                                     formation.BeginSpawn(count, isMounted);
                                     Mission.Current.SpawnFormation(formation, count, spawn_with_horses, isMounted, isReinforcement);
                                     ((MBList<Formation>)AccessTools.Field(t, "_spawnedFormations").GetValue(__instance)).Add(formation);
-                                    if (troopOrigin.IsUnderPlayersCommand)
+                                    if (troopOrigin.IsUnderPlayersCommand && !party_origin_position.IsValid)
                                     {
-                                        party_origin_direction = formation.Direction;
                                         party_origin_position = formation.CurrentPosition;
+                                        party_origin_direction = formation.Direction;
                                     }
-                                    if (!is_playerside && enemy_origin_position == Vec2.Invalid)
+                                    if (!is_playerside && !enemy_origin_position.IsValid)
                                     {
                                         enemy_origin_position = formation.CurrentPosition;
-                                        InformationManager.DisplayMessage(new InformationMessage(enemy_origin_position.ToString()));
                                     }
                                 }
                                 if (!is_initial_spawn_over)
@@ -341,10 +343,17 @@ namespace Tired_party.sneak_attack
                                 }
                                 else
                                 {
-                                    if (radius == 0 && party_origin_position != Vec2.Invalid && enemy_origin_position != Vec2.Invalid)
+                                    
+                                    if (radius == 0 && party_origin_position.IsValid && enemy_origin_position.IsValid)
                                     {
-                                        radius = (party_origin_position - enemy_origin_position).Length / 2 + 30;
-                                        center_point = new Vec2((party_origin_position + enemy_origin_position).x / 2, (party_origin_position + enemy_origin_position).y / 2);
+                                        Vec3 boundary_min;
+                                        Vec3 boundary_max;
+                                        Mission.Current.Scene.GetBoundingBox(out boundary_min, out boundary_max);
+                                        radius = (boundary_max - boundary_min).AsVec2.Length;
+                                        center_point = new Vec2((boundary_min + boundary_max).x / 2, (boundary_max + boundary_min).y / 2);
+                                        //radius = (party_origin_position - enemy_origin_position).Length / 2 + 100f;
+                                        //center_point = new Vec2((party_origin_position + enemy_origin_position).x / 2, (party_origin_position + enemy_origin_position).y / 2);
+                                        party_origin_direction = enemy_origin_position - party_origin_position;
                                     }
                                     agent_spawn_controller controller = Mission.Current.GetMissionBehaviour<agent_spawn_controller>();
                                     if (controller != null)
@@ -355,32 +364,47 @@ namespace Tired_party.sneak_attack
                                             float angle = main_party_direction.AngleBetween(data.enter_direction);
                                             Vec2 now_direction = party_origin_direction;
                                             now_direction.RotateCCW(angle);
-                                            Vec2 now_position = center_point + radius * (-now_direction);
-                                            now_position = Mission.Current.GetRandomPositionAroundPoint(now_position.ToVec3(), 1, 10, true).AsVec2;
-                                            NavigationData navigationData = new NavigationData(now_position.ToVec3().ToWorldPosition().GetGroundVec3()
-                                                , is_playerside ? party_origin_direction.ToVec3().ToWorldPosition().GetGroundVec3() : enemy_origin_position.ToVec3().ToWorldPosition().GetGroundVec3(), 1000);
-                                            if (Mission.Current.IsPositionInsideBoundaries(now_position) && Mission.Current.GetPathBetweenPositions(ref navigationData))
-                                            {
-                                                MatrixFrame frame = new MatrixFrame(Mat3.Identity, now_position.ToVec3().ToWorldPosition().GetGroundVec3());
-                                                frame.rotation.Orthonormalize();
-                                                Agent agent = Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, new MatrixFrame?(frame));
-                                                AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, frame);
+                                            now_direction.Normalized();
 
+                                            //Vec2 now_position = center_point + radius * (-now_direction) * (float)(4 / 5 + 1 / 5 * 2 / Math.PI * Math.Abs(Math.Abs(angle) - Math.PI / 2));
+                                            Vec2 now_position = center_point + radius * (-now_direction);
+                                            now_position = Mission.Current.GetClosestBoundaryPosition(now_position);
+                                            now_position += new Vec2(MBRandom.RandomFloatRanged(0f, 20f), MBRandom.RandomFloatRanged(0f, 20f));
+                                            WorldPosition world = now_position.ToVec3().ToWorldPosition();
+                                            if (true)//第一种情况，在边界边缘
+                                            {
+                                                
+                                                Team agentTeam = Mission.GetAgentTeam(troopOrigin, is_playerside);
+                                                MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false, -1, 0f, true).ToGroundMatrixFrame();
+                                                frame.origin.x = now_position.x;
+                                                frame.origin.y = now_position.y;
+                                                frame.origin.z = frame.origin.ToWorldPosition().GetGroundZ();
+                                                MatrixFrame matrixFrame = new MatrixFrame(Mat3.Identity, frame.origin);
+                                                matrixFrame.rotation.Orthonormalize();
+                                                Agent agent = Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, new MatrixFrame?(matrixFrame));
+                                                AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, matrixFrame);
                                             }
                                             else
                                             {
                                                 if (angle > Math.PI / 2 && angle < Math.PI * 3 / 2)
                                                 {
-                                                    MatrixFrame frame = new MatrixFrame(Mat3.Identity, Mission.Current.GetRandomPositionAroundPoint(enemy_origin_position.ToVec3(), 1, 10, true).ToWorldPosition().GetGroundVec3());
-                                                    frame.rotation.Orthonormalize();
-                                                    
-                                                    Agent agent = Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, new MatrixFrame?(frame));
-                                                    AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, frame);
+                                                    Team agentTeam = Mission.GetAgentTeam(troopOrigin, is_playerside);
+                                                    MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false, -1, 0f, true).ToGroundMatrixFrame();
+                                                    now_position = enemy_origin_position + (party_origin_direction * (radius / 2));
+                                                    now_position = Mission.Current.GetRandomPositionAroundPoint(enemy_origin_position.ToVec3(), 1, 10, true).AsVec2;
+                                                    frame.origin.x = now_position.x;
+                                                    frame.origin.y = now_position.y;
+                                                    frame.origin.z = frame.origin.ToWorldPosition().GetGroundZ();
+                                                    MatrixFrame matrixFrame = new MatrixFrame(Mat3.Identity, frame.origin);
+                                                    matrixFrame.rotation.Orthonormalize();
+                                                    Agent agent = Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, new MatrixFrame?(matrixFrame));
+                                                    AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, matrixFrame);   
                                                 }
                                                 else
                                                 {
                                                     Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, null);
                                                 }
+                                                
                                             }
                                             data.number--;
                                             if (data.number == 0)
@@ -388,6 +412,14 @@ namespace Tired_party.sneak_attack
                                                 controller.ready_to_place.Remove(data);
                                             }
                                         }
+                                        else
+                                        {
+                                            Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, null);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, null);
                                     }
                                 }
                                 num++;
@@ -420,6 +452,38 @@ namespace Tired_party.sneak_attack
                 }
             }
             return true;
+        }
+
+        private static Vec2 get_position(Vec2 vec)
+        {
+            Vec2 ans = Vec2.Invalid;
+            Vec3 boundary_min;
+            Vec3 boundary_max;
+            Mission.Current.Scene.GetBoundingBox(out boundary_min, out boundary_max);
+            float part_x = (boundary_max.x - boundary_min.x) / 10f;
+            float part_y = (boundary_max.y - boundary_min.y) / 10f;
+            if (vec.y >= boundary_max.y)
+            {
+                ans = new Vec2(vec.x, boundary_max.y - part_y);
+                goto go_out;
+            }
+            if(vec.y <= boundary_min.y)
+            {
+                ans = new Vec2(vec.x, boundary_min.y + part_y);
+                goto go_out;
+            }
+            if(vec.x <= boundary_min.x)
+            {
+                ans = new Vec2(boundary_min.x + part_x, vec.y);
+                goto go_out;
+            }
+            if(vec.x >= boundary_max.x)
+            {
+                ans = new Vec2(boundary_max.x - part_x, vec.y);
+                goto go_out;
+            }
+            go_out:;
+            return ans;
         }
 
         public static Vec2 enemy_origin_position;

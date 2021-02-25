@@ -92,6 +92,10 @@ namespace Tired_party
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
         public bool ban_reinforcement { get; set; }
 
+        [SettingPropertyBool("{=1JyvOHCdfV}ban time passes after mission", RequireRestart = false, IsToggle = false)]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_base_setting}basic setting")]
+        public bool is_ban_time_pass { get; set; }
+
 
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]

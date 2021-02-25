@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
@@ -17,7 +18,7 @@ namespace Tired_party.Mission_time
         [HarmonyPatch("MakeReadyParty")]
         public static bool Prefix(MapEventSide __instance, MapEventParty battleParty, FlattenedTroopRoster priorityTroops, bool includePlayers, int sizeOfSide)
         {
-			if(!Party_tired.is_wish_mission)
+			if(!Party_tired.is_wish_mission || __instance.MapEvent != MapEvent.PlayerMapEvent)
             {
 				return true;
             }
@@ -30,7 +31,11 @@ namespace Tired_party.Mission_time
 				int add_num = 0;
 				if(index >= missiontime_data.current.initial_troop_num[side])
                 {
-					add_num += 50000 * (index - missiontime_data.current.initial_troop_num[side]);
+					add_num += 50000 * (missiontime_data.current.parties[side].Count - index - 1);
+                }
+				else
+                {
+					add_num += 50000 * (missiontime_data.current.parties[side].Count - missiontime_data.current.initial_troop_num[side]);
                 }
 				while (enumerator.MoveNext())
 				{
