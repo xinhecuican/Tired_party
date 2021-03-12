@@ -21,6 +21,7 @@ namespace Tired_party.sneak_attack
 {
     class spawn_logic_patch
     {
+        private static string[] torch = new string[] { "torch_outdoors_a", "torch_long_b", "torch_long_a" };
         private static string[] used_tent = new string[] { "empire_street_tent_04", "empire_street_tent_05", "empire_street_tent_06" };
         private static string[] environment_things = new string[] { "burning_campfire", "bd_barrel_a", "bd_barrel_b", "bd_barrel_c", "bd_barrel_d", "bd_barrel_e"
         ,"bd_cart_heap_a", "bd_cart_heap_b", "bd_sack_heap_a", "bd_sack_heap_b"};
@@ -137,21 +138,31 @@ namespace Tired_party.sneak_attack
                                         while (ans <= list2.Count / 5 + 1)
                                         //for(int k=1; k<=list2.Count / 5 + 1; k++)
                                         {
-                                            Vec2 add_vec2 = x_vector * (k % 2 > 0 ? 1 : -1) * k * 10 + y_vector * (MBRandom.RandomFloat * (MBRandom.RandomFloat > 0.5 ? 1 : -1) - (int)(k / 10) * 5);
+                                            Vec2 add_vec2 = x_vector * (k % 2 > 0 ? 1 : -1) * k * 10 + y_vector * (MBRandom.RandomFloat * (MBRandom.RandomFloat > 0.5 ? 1 : -1) / 2 - (int)(k / 10f) * 11f);
+                                            if(!Mission.Current.IsPositionInsideBoundaries(origin.AsVec2 + add_vec2))
+                                            {
+                                                add_vec2 = x_vector * (k % 2 > 0 ? 1 : -1) * k * 10 + y_vector * (int)(k / 10f) * 10f;
+                                            }
                                             origin.SetVec2(origin.AsVec2 + add_vec2);
-
-                                            if (Mission.Current.IsFormationUnitPositionAvailable(ref origin, formation.Team))
+                                            if (Mission.Current.IsFormationUnitPositionAvailable(ref origin, formation.Team) || k > 3 * (list2.Count / 5 + 1))
                                             {
                                                 tent_location.Add(origin.AsVec2);
                                                 WorldFrame value2 = new WorldFrame(identity, origin);
                                                 MatrixFrame frame = value2.ToGroundMatrixFrame();
                                                 frame.rotation.Orthonormalize();
                                                 //frame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+                                                refresh_box(frame.origin.AsVec2);
                                                 Mission.Current.CreateMissionObjectFromPrefab(used_tent[MBRandom.RandomInt() % 3], frame);
-                                                if (MBRandom.RandomFloat > 0.6)
+                                                frame.origin.x += 3;
+                                                frame.rotation.OrthonormalizeAccordingToForwardAndKeepUpAsZAxis();
+                                                int used_torch = MBRandom.RandomInt();
+                                                used_torch %= torch.Length;
+                                                Mission.Current.CreateMissionObjectFromPrefab(torch[used_torch], frame);
+                                                float random_sum = MBRandom.RandomFloat;
+                                                if (random_sum > 0.6)
                                                 {
-                                                    float random_x = 2 * MBRandom.RandomFloat;
-                                                    float random_y = 4 + MBRandom.RandomFloat;
+                                                    float random_x = 2 * random_sum;
+                                                    float random_y = 4 + random_sum;
                                                     Vec2 vec2 = random_x * x_vector + random_y * y_vector;
                                                     origin.SetVec2(origin.AsVec2 + vec2);
                                                     WorldFrame frame1 = new WorldFrame(identity, origin);
@@ -175,6 +186,7 @@ namespace Tired_party.sneak_attack
                                     }*/
                                     //AccessTools.Property(typeof(Formation), "Width").SetValue(formation, formation.Width * 2);
                                     formation.FiringOrder = FiringOrder.FiringOrderHoldYourFire;
+                                    formation.MovementOrder = MovementOrder.MovementOrderStop;
                                     if (isMounted)
                                     {
                                         if ((int)AccessTools.Field(typeof(MovementOrder), "OrderEnum").GetValue(formation.MovementOrder) != 0xA)
@@ -209,15 +221,16 @@ namespace Tired_party.sneak_attack
                                         {
                                             spawn_with_horses = false;
                                         }
-                                        Agent agent = Mission.Current.SpawnTroop(troopOrigin, false, true, spawn_with_horses, isReinforcement, false, count, num, false, false, false, "as_human_hideout_bandit", new MatrixFrame?(matrixFrame));
-
+                                        Agent agent = Mission.Current.SpawnTroop(troopOrigin, false, true, spawn_with_horses, isReinforcement, false, count, num, false, false, false, "as_human_hideout_bandit", null);
                                         AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, matrixFrame);
+                                        agent.SetWatchState(AgentAIStateFlagComponent.WatchState.Patroling);
                                         agent.WieldInitialWeapons(Agent.WeaponWieldActionType.InstantAfterPickUp);
                                         AgentFlag agentFlags = agent.GetAgentFlags();
                                         agent.SetAgentFlags((agentFlags | AgentFlag.CanGetAlarmed));
 
                                         if (formation_num % 10 != 0)
                                         {
+                                            
                                             ActionIndexCache first_action = ActionIndexCache.Create("act_dungeon_prisoner_sleep");
                                             agent.SetActionChannel(0, first_action, false, 0UL, 0f, 1f, -0.2f, 10000f, 0, false, -0.2f, 1, true);
                                             agent.AddComponent(new action_component(agent));
@@ -225,6 +238,9 @@ namespace Tired_party.sneak_attack
                                         }
                                         else
                                         {
+                                            agent.SetScriptedCombatFlags(Agent.AISpecialCombatModeFlags.None);
+                                            Agent.AIScriptedFrameFlags flags = agent.GetScriptedFlags();
+                                            agent.SetScriptedFlags(flags | Agent.AIScriptedFrameFlags.DoNotRun);
                                             agent.AddComponent(new patrol_component(agent));
                                         }
                                         agent.GetComponent<CampaignAgentComponent>().CreateAgentNavigator();
@@ -382,6 +398,7 @@ namespace Tired_party.sneak_attack
                                                 MatrixFrame matrixFrame = new MatrixFrame(Mat3.Identity, frame.origin);
                                                 matrixFrame.rotation.Orthonormalize();
                                                 Agent agent = Mission.Current.SpawnTroop(troopOrigin, is_playerside, true, spawn_with_horses, isReinforcement, enforceSpawningOnInitialPoint, count, num, true, true, false, null, new MatrixFrame?(matrixFrame));
+                                                
                                                 AccessTools.Property(typeof(Agent), "InitialFrame").SetValue(agent, matrixFrame);
                                             }
                                             else
@@ -454,6 +471,26 @@ namespace Tired_party.sneak_attack
             return true;
         }
 
+        private static void refresh_box(Vec2 vec)
+        {
+            if(vec.x < box_min.x)
+            {
+                box_min.x = vec.x;
+            }
+            if(vec.y < box_min.y)
+            {
+                box_min.y = vec.y;
+            }
+            if(vec.x > box_max.x)
+            {
+                box_max.x = vec.x;
+            }
+            if(vec.y > box_max.y)
+            {
+                box_max.y = vec.y;
+            }
+        }
+
         private static Vec2 get_position(Vec2 vec)
         {
             Vec2 ans = Vec2.Invalid;
@@ -485,6 +522,9 @@ namespace Tired_party.sneak_attack
             go_out:;
             return ans;
         }
+
+        public static Vec2 box_min;
+        public static Vec2 box_max;
 
         public static Vec2 enemy_origin_position;
         public static Vec2 party_origin_position;

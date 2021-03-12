@@ -97,6 +97,10 @@ namespace Tired_party
         public bool is_ban_time_pass { get; set; }
 
 
+        [SettingPropertyInteger("{=q2ZJdPm2Bp}reinforcement mode", 0, 2, Order = 10, RequireRestart = false, HintText = "{=kAJQazblXg}If choose 0, it's normal. If choose 1, party for reinforcement in enemy side will don't under your commend. If choose 2, all party except your party will don't under your commend")]
+        [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
+        public int reinforcement_mode { get; set; } = 1;
+
         [SettingPropertyFloatingInteger("{=tired_party_night_time}recovery rate One hour in the evening", 0f, 1f, "0.00", Order = 2, RequireRestart = false, HintText = "{=tired_hint_text_night_time}Value recovered per hour at night, default is 0.33")]
         [SettingPropertyGroup("{=tired_party_setting}setting/{=tired_party_sum_setting}Numerical settings")]
         public float recovery_in_night_time { get; set; } = Party_tired.recovery_in_night_time;

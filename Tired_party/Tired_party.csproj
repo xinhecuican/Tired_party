@@ -360,8 +360,11 @@
     <Compile Include="Mission_time\arrive_time_data.cs" />
     <Compile Include="Mission_time\check_radius_patch.cs" />
     <Compile Include="Mission_time\end_behaivor.cs" />
+    <Compile Include="Mission_time\isUnderPlayerCommendGetter_patch.cs.cs" />
     <Compile Include="Mission_time\MissionSide_patch.cs" />
     <Compile Include="Mission_time\missiontime_data.cs" />
+    <Compile Include="Mission_time\Nearlycome_notification.cs" />
+    <Compile Include="Mission_time\Reinforce_sum_patch.cs" />
     <Compile Include="Mission_time\time_pass_behaviour.cs" />
     <Compile Include="Mission_time\using_missiontime_missions.cs" />
     <Compile Include="Model\combat_state_model.cs" />

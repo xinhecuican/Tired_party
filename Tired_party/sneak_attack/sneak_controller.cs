@@ -28,7 +28,7 @@ namespace Tired_party.sneak_attack
         private bool _troopsInitialized;
         private BattleSideEnum player_side;
         public static bool is_drop_items;
-        public static List<Agent> agents = new List<Agent>();
+        public static List<Agent> agents;
         public static int drop_num;
 
 
@@ -38,10 +38,13 @@ namespace Tired_party.sneak_attack
         }
         public override void OnBehaviourInitialize()
         {
+            agents = new List<Agent>();
             base.OnBehaviourInitialize();
             this._battleAgentLogic = base.Mission.GetMissionBehaviour<BattleAgentLogic>();
             this._battleEndLogic = base.Mission.GetMissionBehaviour<BattleEndLogic>();
             _Spawn_Logic = base.Mission.GetMissionBehaviour<MissionAgentSpawnLogic>();
+            spawn_logic_patch.box_max = new Vec2(0, 0);
+            spawn_logic_patch.box_min = new Vec2(0, 0);
         }
 
         public override void AfterStart()
@@ -78,14 +81,14 @@ namespace Tired_party.sneak_attack
                 agent.TryToSheathWeaponInHand(Agent.HandIndex.MainHand,
                     Agent.WeaponWieldActionType.WithAnimation);
             }*/
-            if((flag == Agent.AIStateFlag.Alarmed || flag == Agent.AIStateFlag.Cautious) && agents != null)
+            if(flag == Agent.AIStateFlag.Alarmed || flag == Agent.AIStateFlag.Cautious)
             {
                 action_component component = agent.GetComponent<action_component>();
                 if (component != null)
                 {    
                     if(flag == Agent.AIStateFlag.Alarmed)
                     {
-                        component.first_action_begin = true;
+                        component.prepare_asleep = true;
                     }
                 }
                 
@@ -95,6 +98,7 @@ namespace Tired_party.sneak_attack
                 patrol_component component1 = agent.GetComponent<patrol_component>();
                 if (component1 != null)
                 {
+                    agent.SetWantsToYell();
                     agent.DisableScriptedMovement();
                 }
                 else
@@ -104,7 +108,7 @@ namespace Tired_party.sneak_attack
                         DropWeapons(agent);
                     }
                 }
-                agent.SetWantsToYell();
+                
             }
             
         }
@@ -120,7 +124,6 @@ namespace Tired_party.sneak_attack
                     return;
                 
                 }
-                UsedObjectTick(dt);
             }
             catch(Exception e)
             {
@@ -129,21 +132,19 @@ namespace Tired_party.sneak_attack
             }
         }
 
-        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
-        {
-            
-        }
 
         protected override void OnEndMission()
         {
             Party_tired.is_sneak_mission = false;
+            spawn_logic_patch.box_min = Vec2.Invalid;
+            spawn_logic_patch.box_max = Vec2.Invalid;
         }
 
         private void InitializeMission()
         {
             try
             {
-                base.Mission.SetMissionMode(MissionMode.Battle, true);
+                base.Mission.SetMissionMode(MissionMode.Stealth, true);
                 base.Mission.DoesMissionRequireCivilianEquipment = false;
             }
             catch(Exception e)
@@ -151,11 +152,6 @@ namespace Tired_party.sneak_attack
                 MethodInfo methodInfo = MethodBase.GetCurrentMethod() as MethodInfo;
                 debug_helper.HandleException(e, methodInfo, "submodule load error");
             }
-        }
-
-        private void UsedObjectTick(float dt)
-        {
-            
         }
 
         public static void DropWeapons(Agent agent)
@@ -167,7 +163,6 @@ namespace Tired_party.sneak_attack
                     
                     WeaponClass weapon = agent.Equipment[equipmentIndex].Item.PrimaryWeapon.WeaponClass;
                     agent.DropItem(equipmentIndex, weapon);
-                    break;
                 }
             }
         }

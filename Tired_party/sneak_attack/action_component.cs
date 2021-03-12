@@ -16,12 +16,14 @@ namespace Tired_party.sneak_attack
         public bool second_action_begin = false;
         public bool last_action_begin = false;
         public bool last_aciton_end = false;
+        public bool prepare_asleep = false;
         private readonly ActionIndexCache first_action = ActionIndexCache.Create("act_dungeon_prisoner_sleep_wakeup");
         private readonly ActionIndexCache second_action = ActionIndexCache.Create("act_scared_idle_" + (MBRandom.RandomInt() % 3).ToString());
         private readonly ActionIndexCache last_action = ActionIndexCache.Create("act_scared_to_normal_" + (MBRandom.RandomInt() % 3).ToString());
         public MissionTimer first_action_checker;
         public MissionTimer second_action_checker;
         public MissionTimer last_action_checker;
+        public MissionTimer prepare_asleep_checker;
        
         public action_component(Agent agent) : base(agent)
         {
@@ -30,6 +32,17 @@ namespace Tired_party.sneak_attack
 
         protected override void OnTickAsAI(float dt)
         {
+            if(prepare_asleep)
+            {
+                prepare_asleep_checker = new MissionTimer(MBRandom.RandomFloatRanged(3, 20));
+                prepare_asleep = false;
+            }
+            if(prepare_asleep_checker != null && prepare_asleep_checker.Check(true))
+            {
+                first_action_begin = true;
+                prepare_asleep_checker = null;
+                
+            }
             if(first_action_begin)
             {
                 agent.SetActionChannel(0, first_action, false, 0UL, 0f, 3f, -0.2f, 0.4f, MBRandom.RandomFloat * 2 + 1f, false, -0.2f, 0, true);
@@ -43,7 +56,7 @@ namespace Tired_party.sneak_attack
             }
             if(second_action_begin)
             {
-                agent.SetActionChannel(0, first_action, false, 0UL, 0f, 0.6f, -0.2f, 0.4f, MBRandom.RandomFloat * 2, false, -0.2f, 0, true);
+                agent.SetActionChannel(0, second_action, false, 0UL, 0f, 0.6f, -0.2f, 0.4f, MBRandom.RandomFloat * 2, false, -0.2f, 0, true);
                 second_action_begin = false;
                 second_action_checker = new MissionTimer(0.1f);
             }
@@ -56,6 +69,7 @@ namespace Tired_party.sneak_attack
             {
                 agent.SetActionChannel(0, last_action, false, 0UL, 0f, 0.6f, -0.2f, 2f, MBRandom.RandomFloat, true, -0.2f, 0, true);
                 last_action_begin = false;
+                agent.SetWantsToYell();
             }
         }
     }

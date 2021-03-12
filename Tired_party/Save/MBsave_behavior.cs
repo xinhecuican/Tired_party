@@ -19,11 +19,26 @@ namespace Tired_party.Save
 {
     class MBsave_behavior : CampaignBehaviorBase
     {
+
+        public MBsave_behavior()
+        {
+            is_delay = false;
+        }
         public override void RegisterEvents()
         {
             
             CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, new Action(saveData));
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(LoadData));
+            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(delay_load));
+        }
+
+        private void delay_load()
+        {
+            if(is_delay)
+            {
+                is_delay = false;
+                mcm_data.load_data();
+            }
         }
 
         private void saveData()
@@ -66,6 +81,7 @@ namespace Tired_party.Save
             {
                 Party_tired.Current.Information.Add(data);
             }
+            is_delay = true;
             mcm_data.load_data();
             /*GlobalSettings<mod_setting>.Instance.is_ban = mcm_data.is_ban  ;
             GlobalSettings<mod_setting>.Instance.is_ban_army = mcm_data.is_ban_army ;
@@ -101,6 +117,7 @@ namespace Tired_party.Save
                 
             }
         }
+        private bool is_delay;
         public static Party_tired party = new Party_tired();
         public static MCMsetting_data mcm_data = new MCMsetting_data();
        

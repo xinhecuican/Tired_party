@@ -54,6 +54,8 @@ namespace Tired_party.Save
         public float battle_radius;
         [SaveableField(22)]
         public bool is_ban_time_pass;
+        [SaveableField(23)]
+        public int reinforcement_mode;
 
         public void save_data()
         {
@@ -79,6 +81,7 @@ namespace Tired_party.Save
             time_lapse_ratio = GlobalSettings<mod_setting>.Instance.time_lapse_ratio;
             battle_radius = GlobalSettings<mod_setting>.Instance.battle_radius;
             is_ban_time_pass = GlobalSettings<mod_setting>.Instance.is_ban_time_pass;
+            reinforcement_mode = GlobalSettings<mod_setting>.Instance.reinforcement_mode;
         }
 
         public void load_data()
@@ -105,6 +108,7 @@ namespace Tired_party.Save
             GlobalSettings<mod_setting>.Instance.time_lapse_ratio = time_lapse_ratio;
             GlobalSettings<mod_setting>.Instance.battle_radius = battle_radius;
             GlobalSettings<mod_setting>.Instance.is_ban_time_pass = is_ban_time_pass;
+            GlobalSettings<mod_setting>.Instance.reinforcement_mode = reinforcement_mode;
         }
     }
 }

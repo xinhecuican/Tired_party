@@ -40,6 +40,7 @@ namespace Tired_party.Mission_time
             spawn_logic_patch.radius = 0;
             spawn_logic_patch.center_point = Vec2.Invalid;
             spawn_logic_patch.party_origin_position = Vec2.Invalid;
+            isUnderPlayerCommendGetter_patch._controller = null;
         }
 
         private void on_init()
@@ -78,7 +79,7 @@ namespace Tired_party.Mission_time
                         else
                         {
                             Vec2 direction = position - party.Party.Position2D;
-                            time_and_direction[i].Add(new arrive_time_data(direction, time, party));
+                            time_and_direction[i].Add(new arrive_time_data(direction, time, party, i));
                         }
                     }
                     if(initial_troop_num[i] == 0)

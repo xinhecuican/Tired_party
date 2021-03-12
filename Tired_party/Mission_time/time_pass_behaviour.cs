@@ -84,7 +84,10 @@ namespace Tired_party.Mission_time
                     {
                         foreach (MobileParty party in active_party)
                         {
-                            party.Ai.RethinkAtNextHourlyTick = true;
+                            if(party.IsActive)
+                            {
+                                party.Ai.RethinkAtNextHourlyTick = true;
+                            }
                         }
                         active_party.Clear();
                         Campaign.Current.SetTimeControlModeLock(false);
@@ -94,7 +97,10 @@ namespace Tired_party.Mission_time
                     }
                     foreach (MobileParty party in active_party)
                     {
-                        party.SetMoveModeHold();
+                        if(party.IsActive)
+                        {
+                            party.Ai.DisableForHours((int)pass_time);
+                        }
                     }
                     Campaign.Current.MainParty.SetMoveGoToPoint(main_party_position);
                 }
