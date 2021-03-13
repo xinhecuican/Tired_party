@@ -26,7 +26,7 @@ namespace Tired_party
                 TroopRoster roster = mobile.MemberRoster;
                 TroopRoster prison_roster = mobile.PrisonRoster;
                 int all_tier = 0;
-                foreach (TroopRosterElement characterObject in roster)
+                foreach (TroopRosterElement characterObject in roster.GetTroopRoster())
                 {
                     all_tier += characterObject.Character.Tier * characterObject.Number;
                 }
@@ -72,7 +72,7 @@ namespace Tired_party
             {
                 TroopRoster member_roster = party.MemberRoster;
                 TroopRoster prison_roster = party.PrisonRoster;
-                foreach (TroopRosterElement characterObject in member_roster)
+                foreach (TroopRosterElement characterObject in member_roster.GetTroopRoster())
                 {
                     all_tier += characterObject.Character.Tier * characterObject.Number;
                 }

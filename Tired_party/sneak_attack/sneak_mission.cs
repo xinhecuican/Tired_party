@@ -65,20 +65,5 @@ namespace Tired_party.sneak_attack
 				return array;
 			}, true, true);
 		}
-
-        public static FlattenedTroopRoster get_flattened_roster(MapEvent mapEvent, BattleSideEnum side)
-        {
-            List<PartyBase> list = (from x in mapEvent.PartiesOnSide(side)
-                                    where x.IsMobile
-                                    select x).ToList<PartyBase>();
-            int num = list.Sum((PartyBase x) => x.MemberRoster.TotalHealthyCount);
-            FlattenedTroopRoster flattenedTroopRoster = new FlattenedTroopRoster(num);
-            foreach (PartyBase partyBase in list)
-            {
-                flattenedTroopRoster.Add(partyBase.MemberRoster.ToFlattenedRoster());
-            }
-            flattenedTroopRoster.RemoveIf((FlattenedTroopRosterElement x) => x.IsWounded);
-            return flattenedTroopRoster;
-        }
     }
 }

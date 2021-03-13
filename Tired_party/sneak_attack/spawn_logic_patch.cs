@@ -47,11 +47,22 @@ namespace Tired_party.sneak_attack
                 {
 
                     int num = 0;
+                    List<IAgentOriginBase> pre_troop_supplier = ((List<IAgentOriginBase>)AccessTools.Field(t, "_preSuppliedTroops").GetValue(__instance));
+                    int supply_troop_count = Math.Min(pre_troop_supplier.Count, number);
+                    List<IAgentOriginBase> list = new List<IAgentOriginBase>();
+                    if (supply_troop_count > 0)
+                    {
+                        for (int i = 0; i < supply_troop_count; i++)
+                        {
+                            list.Add(pre_troop_supplier[i]);
+                        }
+                        pre_troop_supplier.RemoveRange(0, supply_troop_count);
+                    }
                     //list: 要生成的军队信息
-                    List<IAgentOriginBase> list = ((IMissionTroopSupplier)AccessTools.Field(t, "_troopSupplier").GetValue(__instance)).SupplyTroops(number).ToList<IAgentOriginBase>();
+                    int numberToAllocate = number - supply_troop_count;
+                    list.AddRange(((IMissionTroopSupplier)AccessTools.Field(t, "_troopSupplier").GetValue(__instance)).SupplyTroops(numberToAllocate));
                     //list2: 对应阵营信息
-                    List<IAgentOriginBase> list2 = new List<IAgentOriginBase>();
-                    Mission.Current.ResetTotalWidth();
+                    List <IAgentOriginBase> list2 = new List<IAgentOriginBase>();
                     for (int i = 0; i < 8; i++)
                     {
                         list2.Clear();
@@ -79,9 +90,6 @@ namespace Tired_party.sneak_attack
                         int count = list2.Count;
                         if (count > 0)
                         {
-                            float num2 = (i == 2 || i == 7 || i == 6 || i == 3) ? 3f : 1f;
-                            float num3 = (i == 2 || i == 7 || i == 6 || i == 3) ? 0.75f : 0.6f;
-                            Mission.Current.SetTotalWidthBeforeNewFormation(num2 * (float)Math.Pow((double)count, (double)num3));
                             int formation_num = 0;
                             List<Vec2> tent_location = new List<Vec2>();
                             Vec2 x_vector = Vec2.Invalid;
@@ -115,7 +123,7 @@ namespace Tired_party.sneak_attack
                                         x_vector.Normalized();
                                         y_vector.Normalized();
                                         WorldFrame formationSpawnFrame = Mission.Current.GetFormationSpawnFrame(formation.Team.Side, formation.FormationIndex,
-                                            isReinforcement, -1, 0f, spawn_with_horses);
+                                            false);
                                         WorldPosition origin = formationSpawnFrame.Origin;
                                         WorldPosition order_position = formation.OrderPosition;
                                         float add_x = order_position.X - origin.X < 0 ? -10 : 10;
@@ -127,7 +135,6 @@ namespace Tired_party.sneak_attack
                                         identity.RotateAboutUp(formation.Direction.RotationInRadians);
                                         WorldFrame value = new WorldFrame(identity, origin);
                                         formation.SetPositioning(new WorldPosition?(origin), null, null);
-                                        formation.SetSpawnFrame(new WorldFrame?(value));
                                         WorldFrame worldFrame = new WorldFrame(identity, origin);
                                         MatrixFrame matrix_frame = worldFrame.ToGroundMatrixFrame();
                                         matrix_frame.rotation.Orthonormalize();
@@ -208,7 +215,7 @@ namespace Tired_party.sneak_attack
                                     {
 
                                         Team agentTeam = Mission.GetAgentTeam(troopOrigin, is_playerside);
-                                        MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false, -1, 0f, true).ToGroundMatrixFrame();
+                                        MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false).ToGroundMatrixFrame();
                                         Vec2 tent_vec = tent_location[formation_num / 5];
                                         tent_vec += x_vector * (formation_num % 2 > 0 ? 1 : -1) * ((formation_num % 5) / 2 + 0.7f) + y_vector;
                                         frame.origin.x = tent_vec.x;
@@ -292,11 +299,22 @@ namespace Tired_party.sneak_attack
                 {
 
                     int num = 0;
+                    List<IAgentOriginBase> pre_troop_supplier = ((List<IAgentOriginBase>)AccessTools.Field(t, "_preSuppliedTroops").GetValue(__instance));
+                    int supply_troop_count = Math.Min(pre_troop_supplier.Count, number);
+                    List<IAgentOriginBase> list = new List<IAgentOriginBase>();
+                    if (supply_troop_count > 0)
+                    {
+                        for (int i = 0; i < supply_troop_count; i++)
+                        {
+                            list.Add(pre_troop_supplier[i]);
+                        }
+                        pre_troop_supplier.RemoveRange(0, supply_troop_count);
+                    }
                     //list: 要生成的军队信息
-                    List<IAgentOriginBase> list = ((IMissionTroopSupplier)AccessTools.Field(t, "_troopSupplier").GetValue(__instance)).SupplyTroops(number).ToList<IAgentOriginBase>();
+                    int numberToAllocate = number - supply_troop_count;
+                    list.AddRange(((IMissionTroopSupplier)AccessTools.Field(t, "_troopSupplier").GetValue(__instance)).SupplyTroops(numberToAllocate));
                     //list2: 对应阵营信息
                     List<IAgentOriginBase> list2 = new List<IAgentOriginBase>();
-                    Mission.Current.ResetTotalWidth();
                     for (int i = 0; i < 8; i++)
                     {
                         list2.Clear();
@@ -324,9 +342,6 @@ namespace Tired_party.sneak_attack
                         int count = list2.Count;
                         if (count > 0)
                         {
-                            float num2 = (i == 2 || i == 7 || i == 6 || i == 3) ? 3f : 1f;
-                            float num3 = (i == 2 || i == 7 || i == 6 || i == 3) ? 0.75f : 0.6f;
-                            Mission.Current.SetTotalWidthBeforeNewFormation(num2 * (float)Math.Pow((double)count, (double)num3));
                             Vec2 x_vector = Vec2.Invalid;
                             Vec2 y_vector = Vec2.Invalid;
                             foreach (IAgentOriginBase troopOrigin in list2)
@@ -391,7 +406,7 @@ namespace Tired_party.sneak_attack
                                             {
                                                 
                                                 Team agentTeam = Mission.GetAgentTeam(troopOrigin, is_playerside);
-                                                MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false, -1, 0f, true).ToGroundMatrixFrame();
+                                                MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, true).ToGroundMatrixFrame();
                                                 frame.origin.x = now_position.x;
                                                 frame.origin.y = now_position.y;
                                                 frame.origin.z = frame.origin.ToWorldPosition().GetGroundZ();
@@ -406,7 +421,7 @@ namespace Tired_party.sneak_attack
                                                 if (angle > Math.PI / 2 && angle < Math.PI * 3 / 2)
                                                 {
                                                     Team agentTeam = Mission.GetAgentTeam(troopOrigin, is_playerside);
-                                                    MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false, -1, 0f, true).ToGroundMatrixFrame();
+                                                    MatrixFrame frame = Mission.Current.GetFormationSpawnFrame(agentTeam.Side, FormationClass.NumberOfRegularFormations, false).ToGroundMatrixFrame();
                                                     now_position = enemy_origin_position + (party_origin_direction * (radius / 2));
                                                     now_position = Mission.Current.GetRandomPositionAroundPoint(enemy_origin_position.ToVec3(), 1, 10, true).AsVec2;
                                                     frame.origin.x = now_position.x;

@@ -105,7 +105,7 @@ namespace Tired_party.Mission_time
                                     SPPersonalKillNotificationItemVM message = new SPPersonalKillNotificationItemVM("",RemoveItem);
                                     message.Message = missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
                                          text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")";
-                                    message.ItemType = 1;
+                                    message.ItemType = 4;
                                     Nearlycome_notification.notification_list.Add(message);
                                     //message_helper.TechnicalMessage(missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
                                          //text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")");
@@ -115,7 +115,7 @@ namespace Tired_party.Mission_time
                                     SPPersonalKillNotificationItemVM message = new SPPersonalKillNotificationItemVM("", RemoveItem);
                                     message.Message = missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
                                          text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")";
-                                    message.ItemType = 4;
+                                    message.ItemType = 1;
                                     Nearlycome_notification.notification_list.Add(message);
                                     //message_helper.FriendlyMessage(missiontime_data.current.time_and_direction[i][k].party.Party.MobileParty.Name.ToString() +
                                          //text1.ToString() + "(" + text2 + get_angle_text(missiontime_data.current.time_and_direction[i][k]) + ")");

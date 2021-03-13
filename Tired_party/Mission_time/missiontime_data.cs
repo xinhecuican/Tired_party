@@ -51,7 +51,7 @@ namespace Tired_party.Mission_time
                 {
                     MapEventSide side = MapEvent.PlayerMapEvent.GetMapEventSide((TaleWorlds.Core.BattleSideEnum)i);
                     Vec2 position = MapEvent.PlayerMapEvent.Position;
-                    foreach (MapEventParty party in side.PartyRecs)
+                    foreach (MapEventParty party in side.Parties)
                     {
                         float distance;
                         float time = 0;
